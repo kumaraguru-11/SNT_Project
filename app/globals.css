@@ -1,0 +1,240 @@
+@layer tailwind-base,
+tailwind-utilities,
+primereact;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+/* loader */
+.custom-loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: conic-gradient(#0000 10%, #f97316);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: s3 1s infinite linear;
+}
+
+@keyframes s3 {
+  to {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}
+
+
+/* Input Field floating label */
+.float-label {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+/* Input field styles */
+.input-field {
+  width: 100%;
+  border: 1px solid #f97316;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  background: none;
+}
+
+/* Remove default outline and set border color on focus */
+.input-field:focus {
+  outline: none;
+  border-color: #f97316;
+}
+
+/* Label styles */
+.float-label-text {
+  position: absolute;
+  left: 0.6rem;
+  top: 0.6rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  color: #aaa;
+}
+
+/* Label styles when input is focused or has a value */
+.input-field:focus ~ .float-label-text,
+.input-field:not(:placeholder-shown) ~ .float-label-text {
+  top: -1rem;
+  left: 0.5rem;
+  font-size: 0.75rem;
+  color: #f97316;
+}
+
+/* set Image width
+.icon {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+} */
+
+/*  gototop Button style */
+.hover_links a:hover {
+  background-color: #f97316;
+  color: white;
+}
+
+.arrow {
+  animation: upDown 1s infinite;
+}
+
+@keyframes upDown {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* header  icons hover effect */
+.h-icon i:last-child {
+  display: none;
+}
+.h-icon i {
+  border: 2px solid transparent;
+}
+
+.h-icon i:hover,
+.nav-list a:hover {
+  background-color: #f97316;
+  color: white;
+}
+
+/*Header toggle nav list */
+.Nav-list-2 {
+  position: absolute;
+  top: 5rem;
+  background-color: white;
+  z-index: 2;
+  height: max-content;
+  width: 100%;
+  transition: all 3 ease;
+  padding: 20px;
+
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Nav-list-2 a {
+  margin-top: 1rem;
+  padding: 10px;
+}
+
+.Nav-list-2 a:hover,.btn-hover:hover {
+  background-color: #f97316;
+  color: white;
+}
+
+/*Header search tab */
+.search-tab {
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  height: 20rem;
+  padding: 20px;
+  top: 5.5rem;
+  left: 0;
+  background-color: antiquewhite;
+  box-shadow: 5px 5px 5px 5px #9a9595;
+  border-radius: 10px;
+}
+
+/*carousel component */
+.carousel .slide {
+  max-height: 300px; /* Adjust this value to your desired height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel .slide img {
+  max-height: 100%;
+  object-fit: cover;
+}
+
+/* cart image  */
+.product-img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--secondaryColor);
+  cursor: pointer;
+  transition: all 0.3s linear;
+}
+
+.product-img:hover {
+  transform: scale(1.1);
+}
+
+/* otp field */
+
+.otp .p-inputtext:focus,
+.otp .p-inputtext:active,
+.otp .input:active,
+.otp .input:focus {
+  box-shadow: 0 0 5px 2px #f97316 !important;
+  outline: none !important;
+  border-color: #f97316 !important;
+}
+
+.otp .p-inputtext {
+  border-color: #f97316 !important;
+  width: 2.5rem;
+}
+
+.otp .otp-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  overflow: hidden;
+}
+
+.capsule {
+  height: 18rem;
+  width: 80%;
+  max-width: 28rem;
+  background-color: white;
+  box-shadow: -7px 0px 51px -5px rgba(0, 0, 0, 0.49);
+  border-radius: 10px;
+}
+
+ .center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.otp-field button:hover {
+  text-decoration: underline;
+}
+
+/* header media query */
+@media screen and (max-width: 830px) {
+  .nav-list {
+    display: none;
+  }
+  .h-icon i:last-child {
+    display: inline;
+  }
+  .Nav-list-2 {
+    display: flex;
+  }
+}

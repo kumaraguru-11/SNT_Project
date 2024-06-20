@@ -1,0 +1,134 @@
+"use client";
+import React, { useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Carousel from "../../component/Carousel";
+import axios from "axios";
+
+const main = () => {
+  // const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // const arr=new Array(5).fill('');
+  const arr=[{
+    "title": "Brown eggs",
+    "type": "dairy",
+    "description": "Raw organic brown eggs in a basket",
+    "filename": "0.jpg",
+    "height": 600,
+    "width": 400,
+    "price": 28.1,
+    "rating": 4
+  },
+   {
+    "title": "Sweet fresh stawberry",
+    "type": "fruit",
+    "description": "Sweet fresh stawberry on the wooden table",
+    "filename": "1.jpg",
+    "height": 450,
+    "width": 299,
+    "price": 29.45,
+    "rating": 4
+  }, 
+  {
+    "title": "Asparagus",
+    "type": "vegetable",
+    "description": "Asparagus with ham on the wooden table",
+    "filename": "2.jpg",
+    "height": 450,
+    "width": 299,
+    "price": 18.95,
+    "rating": 3
+  }, {
+    "title": "Green smoothie",
+    "type": "dairy",
+    "description": "Glass of green smoothie with quail egg's yolk, served with cocktail tube, green apple and baby spinach leaves over tin surface.",
+    "filename": "3.jpg",
+    "height": 600,
+    "width": 399,
+    "price": 17.68,
+    "rating": 4
+  }, {
+    "title": "Raw legums",
+    "type": "vegetable",
+    "description": "Raw legums on the wooden table",
+    "filename": "4.jpg",
+    "height": 450,
+    "width": 299,
+    "price": 17.11,
+    "rating": 2
+  }]
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://nutsbee-1.onrender.com/nutsBee/products",
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization:
+  //               "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIERldGFpbHMiLCJpc3MiOiJFdmVudCBTY2hlZHVsZXIiLCJleHAiOjE3MTgzNTQxNjksImlhdCI6MTcxODM1MzU2OSwiZW1haWwiOiJyYW1AZ21haWwuY29tIn0.WIHiin9moloZJpJTOiJEQsy86klZrV7inK2rrRDwYow",
+  //           },
+  //         }
+  //       );
+  //       console.log(response.data);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  return (
+    <div className="container mx-auto p-0">
+      <div>
+        <Carousel />
+      </div>
+      <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {arr.map((val,index) => (
+          <>
+            <div
+              className="card border rounded-lg shadow-lg overflow-hidden cursor-pointer"
+              key={val.title}
+              onClick={() => router.push("/products/productDetail")}
+            >
+              <Image
+                className="product-img"
+                src={`/assest/${val.filename}`}
+                alt="Product Image 1"
+                width={30}
+                height={12}
+                priority
+                layout="responsive"
+              />
+              <div className="p-5 text-center">
+                <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
+                  {val.title}
+                </h2>
+                <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
+                <button
+                  className="bg-orange-500 text-white py-2 px-4 rounded"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/products/cart");
+                  }}
+                >
+                  Add To Cart
+                </button>
+              </div>
+            </div>
+          </>
+        ))}
+       {/* DEMO */}
+            {/* {arr.map((_,id)=>(
+              <>
+              <Image src={`/${id}.jpg`} width={100} height={500} alt="img"/>
+              </>
+            ))} */}
+      </div>
+    </div>
+  );
+};
+
+export default main;
