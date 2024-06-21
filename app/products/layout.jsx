@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
       <GoToTop />
       <Header />
 
-      <main className="mt-0 transition-transform duration-300 p-5 flex-grow">
+      <main className="mt-0 transition-transform duration-300 p-5 flex-grow overflow-hidden">
         {children}
       </main>
     </div>

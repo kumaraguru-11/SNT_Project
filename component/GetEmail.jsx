@@ -15,7 +15,7 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
   const [isLoad, setIsLoad] = useState(false);
 
   const toast = useRef(null);
-  //*toast message
+  //toast message
   const showError = () => {
     toast.current.show({severity:'error', summary: 'Error', detail:'Invalid Email', life: 3000});
 }

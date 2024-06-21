@@ -5,6 +5,7 @@ import OTP from '../../component/OTP_Verification';
 import "primeicons/primeicons.css";
 import GetEmail from '../../component/GetEmail';
 import axios from "axios";
+import { useRouter } from "next/navigation";
 // import Image from "next/image";
 // import Link from "next/link";
 
@@ -18,7 +19,7 @@ const ForgotPassword = () => {
     auth:""
   })
 
-  console.log(reset)
+  const route=useRouter();
 
  //! Input Field state
   const [fields, setFields] = useState([
@@ -37,6 +38,7 @@ const ForgotPassword = () => {
       error: "",
     },
   ]);
+
   //!Toggle Icon state
   const [showPassword, setShowPassword] = useState({
     newpassword: false,
@@ -74,7 +76,7 @@ const ForgotPassword = () => {
     
   };
 
-  //!setting value to the state
+  //!setting value to the state (Input Validation)
   const handleChange = 
     (e) => {
       const { name, value } = e.target;
@@ -94,7 +96,7 @@ const ForgotPassword = () => {
           updatedFields[1].error = "";
           updatedFields[1].hasError = false;
         } else {
-          // If confirm password doesn't match, set error message
+          // If 'confirmpassword' doesn't match, set error message
           updatedFields[1].error = "Passwords do not match";
           updatedFields[1].hasError = true;
         }
@@ -105,7 +107,7 @@ const ForgotPassword = () => {
 
   //!pushing the NewPassword to the DB
   const handleNewPassword = async()=>{
-    console.log(reset)
+    const updatedFields=[...fields];
     const {auth,...resetInput}=reset
     try{
       const res=await axios.patch('https://nutsbee-1.onrender.com/user/resetPassword',resetInput,  {
@@ -114,7 +116,11 @@ const ForgotPassword = () => {
           Authorization: auth,
         },
       })
-      console.log('PATCH RESPONSE-->',res)
+       //Empty the input field after sucessfully update the password
+       updatedFields[0].value=''
+       updatedFields[1].value=''
+       setFields(updatedFields);
+       route.push('/login');
     }catch(error){
       console.log("PATCH ERROR-->",error)
     }
