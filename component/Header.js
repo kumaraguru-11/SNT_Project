@@ -54,7 +54,7 @@ const Header = () => {
     <header
       className="top-0 z-10 flex items-center"
       style={{
-        height: "5rem",
+        height: "6rem",
         position: "sticky",
         backgroundColor: "white",
         borderBottom: "2px solid orange",
@@ -62,7 +62,7 @@ const Header = () => {
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-8">
         <div className="flex items-center">
-          <Image src="/logo-2.jpeg" alt="Logo" className="icon mr-3" width={70} height={80}/>
+          <Image src="/logo-2.jpeg" alt="Logo" className="icon" width={70} height={80} style={{marginRight:"1rem"}}/>
           <span className="text-orange-600 text-2xl font-bold">NUTSBEE</span>
         </div>
         <nav className="nav-list">

@@ -226,6 +226,11 @@ primereact;
   text-decoration: underline;
 }
 
+/* Product Details Component */
+.flex-box{
+  display: flex;
+}
+
 /* header media query */
 @media screen and (max-width: 830px) {
   .nav-list {
@@ -236,5 +241,13 @@ primereact;
   }
   .Nav-list-2 {
     display: flex;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .flex-box{
+    display: flex;
+    flex-direction: column;
+    margin: .5rem 0;
   }
 }

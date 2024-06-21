@@ -1,13 +1,21 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Carousel from "../../component/Carousel";
 import axios from "axios";
+import ProductDetail from '../../component/ProductDetail';
 
 const main = () => {
-  // const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  // const arr=new Array(5).fill('');
+//! SINGLE PRODUCT DIALOG BOX
+const [visible, setVisible] = useState(false);
+const [productId,setProductId]=useState();
+
+const handleProductDetail=(id)=>{
+  setVisible(true);
+  setProductId(id);
+}
+
   const arr=[{
     "title": "Brown eggs",
     "type": "dairy",
@@ -86,12 +94,13 @@ const main = () => {
         <Carousel />
       </div>
       <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {arr.map((val,index) => (
+        {arr.map((val) => (
           <>
             <div
-              className="card border rounded-lg shadow-lg overflow-hidden cursor-pointer"
+              className="card border rounded-lg shadow-lg overflow-hidden"
               key={val.title}
-              onClick={() => router.push("/products/productDetail")}
+              // onClick={() => router.push("/products/productDetail")}
+              onClick={()=>handleProductDetail(val.filename)}
             >
               <Image
                 className="product-img"
@@ -120,13 +129,8 @@ const main = () => {
             </div>
           </>
         ))}
-       {/* DEMO */}
-            {/* {arr.map((_,id)=>(
-              <>
-              <Image src={`/${id}.jpg`} width={100} height={500} alt="img"/>
-              </>
-            ))} */}
       </div>
+      <ProductDetail visible={visible} setVisible={setVisible} productId={productId}/>
     </div>
   );
 };
