@@ -6,6 +6,7 @@ import { Column } from "primereact/column";
 import Image from "next/image";
 
 const Cart = () => {
+  //!fake data
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -99,7 +100,7 @@ const Cart = () => {
     return acc + state.total;
   }, 0);
   const tax = subtotal * (10 / 100);
-  
+
   //!Below functions are the templates for the tabel.
   const imageBodyTemplate = (val) => {
     return (
@@ -158,7 +159,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="overflow-scroll">
+    <div style={{minHeight:"100%",height:"90vh"}}>
       <div className="text-4xl font-extrabold">My Cart</div>
       <div className="gap-2 cart-list">
         {/* Tabel */}
@@ -167,7 +168,7 @@ const Cart = () => {
             value={products}
             header=""
             footer=""
-            tableStyle={{ maxWidth: "60rem" }}
+            tableStyle={{ maxWidth: "60rem" ,backgroundColor:"transparent"}}
           >
             <Column header="Product" body={imageBodyTemplate}></Column>
             <Column header="Price" body={priceBodyTemplate}></Column>
@@ -178,7 +179,7 @@ const Cart = () => {
         </div>
 
         {/* Order summary */}
-        <div className="w-80 h-80 mt-14 bg-slate-100">
+        <div className="w-80 h-64 my-28 bg-slate-100">
           <h2
             className="text-2xl text-center py-3 border-b-3 border-white"
             style={{ borderBottom: "2px solid #EEEEEE" }}
@@ -200,7 +201,7 @@ const Cart = () => {
                 {tax}
               </span>
             </div>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <span className="flex flex-col">
                 <span className="text-green-400">Apply coupon code</span>
                 <input
@@ -209,12 +210,15 @@ const Cart = () => {
                 />
               </span>
               <span>➡</span>
-            </div>
+            </div> */}
           </div>
-          <div className="px-9 py-5 mt-6 bg-slate-200 w-full font-semibold flex justify-between">
+          <div className="px-9 py-4 mt-6 bg-slate-200 w-full font-semibold flex justify-between">
             <span>Total</span>
             <span>Rs.{subtotal + tax}</span>
           </div>
+          <button className="my-4 p-3 bg-green-500 cursor-pointer w-full text-black">
+            Check Out
+          </button>
         </div>
       </div>
     </div>

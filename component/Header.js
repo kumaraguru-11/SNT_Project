@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ListBox } from "primereact/listbox";
 import Image from "next/image";
 
+//!Header icon
 const HeaderIcon = ({ iconClass, active, onClick }) => (
   <i
     className={`${iconClass} cursor-pointer p-3 font-medium`}
@@ -18,6 +19,7 @@ const HeaderIcon = ({ iconClass, active, onClick }) => (
   ></i>
 );
 
+//!Header list
 const NavLink = ({ href, children }) => (
   <Link href={href} className="text-orange-600 font-medium p-3 rounded">
     {children}
@@ -31,9 +33,10 @@ const Header = () => {
     search: false,
     cart: false,
   });
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selecteduser, setSelectedUser] = useState(null);
   const router = useRouter();
 
+  //!icon Active function
   const handleToggle = (key) => {
     setToggle((prevToggle) => ({
       hamburger: false,
@@ -44,11 +47,22 @@ const Header = () => {
     }));
 
     if (key === "cart") {
-      router.push("/products/cart");
+      router.push("/cart");
     }
   };
 
-  const users = [{ name: "Profile" }, { name: "Logout" }];
+  //!user icon dropdown list
+  const users = [
+    { name: "profile", code: "pf" },
+    { name: "Logout", code: "lo" },
+  ];
+
+  //!user icon dropdown link
+  const handleUser = (link) => {
+    setSelectedUser(link);
+    setToggle({ ...toggle, user: false });
+    if (link === "profile") router.push(`/${link}`);
+  };
 
   return (
     <header
@@ -62,11 +76,18 @@ const Header = () => {
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-8">
         <div className="flex items-center">
-          <Image src="/logo-2.jpeg" alt="Logo" className="icon" width={70} height={80} style={{marginRight:"1rem"}}/>
+          <img
+            src="/logo-2.jpg"
+            alt="Logo"
+            className="icon"
+            width={70}
+            height={40}
+            style={{ marginRight: "1rem", height: "auto" }}
+          />
           <span className="text-orange-600 text-2xl font-bold">NUTSBEE</span>
         </div>
         <nav className="nav-list">
-          <NavLink href="/products">All products</NavLink>
+          <NavLink href="/">All products</NavLink>
           <NavLink href="#">Categories</NavLink>
           <NavLink href="#">Contact us</NavLink>
         </nav>
@@ -100,7 +121,7 @@ const Header = () => {
       )}
       {toggle.hamburger && (
         <nav className="Nav-list-2">
-          <NavLink href="#">All products</NavLink>
+          <NavLink href="/">All products</NavLink>
           <NavLink href="#">Categories</NavLink>
           <NavLink href="#">Contact us</NavLink>
         </nav>
@@ -111,8 +132,8 @@ const Header = () => {
           style={{ top: "3.8rem", right: "1.8rem" }}
         >
           <ListBox
-            value={selectedCity}
-            onChange={(e) => setSelectedCity(e.value)}
+            value={selecteduser}
+            onChange={(e) => handleUser(e.value.name)}
             options={users}
             optionLabel="name"
             className="w-full"

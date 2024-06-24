@@ -6,6 +6,7 @@ import Link from "next/link";
 import { validateFields } from "../../component/validation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/NutsBeeAPI/postApi";
 
 const SignUp = () => {
   const route = useRouter();
@@ -131,7 +132,8 @@ const SignUp = () => {
     );
 
     // Create the values object from the valid fields
-    const values = validFields.reduce(  //{firstname:"mohno",lastname:"smith",email:"email@gmail.com",password:'aksdfhhhj'}
+    const values = validFields.reduce(
+      //{firstname:"mohno",lastname:"smith",email:"email@gmail.com",password:'aksdfhhhj'}
       (acc, field) => ({
         ...acc,
         [field.name]: field.value,
@@ -158,27 +160,10 @@ const SignUp = () => {
     };
 
     try {
-      const response = await axios.post(
-        "https://nutsbee-1.onrender.com/user/register",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(response.data);
-      if (response.status === 200) {
-        alert("Registration completed successfully");
-        route.push("/products");
-      } else {
-        alert(
-          `Error during registration: ${
-            response.data.message || "Unknown error"
-          }`
-        );
-      }
+      const response = await registerUser(payload);
+      console.log(response);
+      alert("Registration completed successfully");
+      route.push('/')
     } catch (error) {
       console.error(error);
       alert("Error during registration: " + error.message);
@@ -186,7 +171,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center py-3">
+    <div className="h-full w-full flex items-center justify-center py-3">
       <div className="w-10/12 md:w-7/12 p-4 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
         <div className="hidden sm:flex sm:flex-1 relative border-r-2">
           <h1 className="text-5xl font-black text-orange-300 absolute top-72 left-3 transform -rotate-90 origin-top-left tracking-widest">

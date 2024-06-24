@@ -3,6 +3,7 @@ import { validateFields } from "./validation";
 import Loader from '../component/Loader';
 import axios from "axios";
 import { Toast } from 'primereact/toast';
+import { emailOTP } from "@/NutsBeeAPI/postApi";
 
 
 const GetEmail = ({ setVerify, setReset, reset }) => {
@@ -25,16 +26,18 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
     setIsLoad(true);
     const sendEmail = { email: email.value };
     try {
-      const res = await axios.post(
-        `https://nutsbee-1.onrender.com/user/forgotPassword`,
-        sendEmail,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setReset({ ...reset, auth: res.data.Authorization, email: email.value });
+      // const res = await axios.post(
+      //   `https://nutsbee-1.onrender.com/user/forgotPassword`,
+      //   sendEmail,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      const res=await emailOTP(sendEmail)
+      console.log(res)
+      setReset({ ...reset, auth: res.Authorization, email: email.value });
       setVerify('otp'); // For Conditional Re-rendering
     } catch (error) {
       // console.error("Error fetching data:", error);

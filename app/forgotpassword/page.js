@@ -76,7 +76,7 @@ const ForgotPassword = () => {
     
   };
 
-  //!setting value to the state (Input Validation)
+  //!(Input Validation)
   const handleChange = 
     (e) => {
       const { name, value } = e.target;
@@ -105,7 +105,7 @@ const ForgotPassword = () => {
     if(updatedFields[0].value===updatedFields[1].value)  setReset({...reset,password:updatedFields[0].value});
     }
 
-  //!pushing the NewPassword to the DB
+  //!pushing the NewPassword to the DB(API)
   const handleNewPassword = async()=>{
     const updatedFields=[...fields];
     const {auth,...resetInput}=reset
@@ -135,7 +135,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center py-5" >
+    <div className="h-full w-full flex items-center justify-center py-5" >
       <div className="w-10/12 md:w-7/12 min-h-96 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
         {/* NUTSBEE */}
         <div className="hidden sm:flex sm:flex-1 relative border-r-2">

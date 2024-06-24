@@ -4,6 +4,7 @@ import { InputOtp } from "primereact/inputotp";
 import axios from "axios";
 import Loader from '../component/Loader'
 import { Toast } from 'primereact/toast';
+import {getOtp,reSentOtp} from '@/NutsBeeAPI/getApi';
 
 const OTP_Verification = ({ setVerify, reset, setReset }) => {
   const [token, setTokens] = useState("");
@@ -16,19 +17,19 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
   const showError = () => {
     toast.current.show({severity:'error', summary: 'Error', detail:'Invalid OTP', life: 3000});
 }
-
   //* Re-send OTP
   const fetch = async () => {
     setLoading(true); // Show loader
     try {
-      const res = await axios.get(
-        `https://nutsbee-1.onrender.com/user/resendOtp?email=${reset.email}`,
-        {
-          headers: {
-            Authorization: reset.auth,
-          },
-        }
-      );
+      // const res = await axios.get(
+      //   `https://nutsbee-1.onrender.com/user/resendOtp?email=${reset.email}`,
+      //   {
+      //     headers: {
+      //       Authorization: reset.auth,
+      //     },
+      //   }
+      // );
+      const res=await reSentOtp(reset)
       gettingOTP();
       setTimeRemaining(90); // reset to 1 minute 30 seconds
     } catch (error) {
@@ -42,16 +43,18 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
   const gettingOTP = async () => {
     setLoading(true); // Show loader
     try {
-      const res = await axios.get(
-        `https://nutsbee-1.onrender.com/nutsBee/users?email=${reset.email}`,
-        {
-          headers: {
-            Authorization: reset.auth,
-          },
-        }
-      );
-      setGetOTP(res.data.otp);
-      setReset({ ...reset, otp: res.data.otp });
+      // const res = await axios.get(
+      //   `https://nutsbee-1.onrender.com/nutsBee/users?email=${reset.email}`,
+      //   {
+      //     headers: {
+      //       Authorization: reset.auth,
+      //     },
+      //   }
+      // );
+      
+      const res=await getOtp(reset)
+      setGetOTP(res.otp);
+      setReset({ ...reset, otp: res.otp });
       setIsOtpValid(true); // Reset OTP validity
     } catch (error) {
       console.error("Error fetching data:", error);
