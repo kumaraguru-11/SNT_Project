@@ -2,9 +2,14 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
+import { userInfo } from "../../recoilstore/store";
+import { useRecoilValue } from "recoil";
 
 const profile = () => {
   const [value, setValue] = useState("");
+  const userDetails=useRecoilValue(userInfo);
+
+  console.log(userDetails);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center gap-10">

@@ -5,12 +5,15 @@ import { validateFields } from "../component/validation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/NutsBeeAPI/postApi";
+import { useRecoilState } from "recoil";
+import { authKey, email } from "../recoilstore/store";
 
 const Login_Field = () => {
   const [showPassword, setShowPassword] = useState(false);
   const usernameRef = useRef();
   const passwordRef = useRef();
   const route = useRouter();
+
   const [fields, setFields] = useState([
     {
       id: 1,
@@ -27,6 +30,10 @@ const Login_Field = () => {
       error: "",
     },
   ]);
+
+  //store Auth Key globally(Recoil)
+  const [auth, setAuth] = useRecoilState(authKey);
+  const [userEmail, setUserEmail] = useRecoilState(email);
 
   //post the user data to the db
   const handleSubmit = async (e) => {
@@ -50,12 +57,9 @@ const Login_Field = () => {
 
     try {
       const response = await loginUser(values);
-
-      console.log(response.data);
       if (response.status === 201 || response.status === 200) {
-        let temp = JSON.parse(sessionStorage.getItem("auth")) || '';
-        temp=response.data;
-        sessionStorage.setItem("auth", JSON.stringify(temp));
+        setAuth(response.data);
+        setUserEmail(values.email);
         route.push("/");
       } else {
         alert(

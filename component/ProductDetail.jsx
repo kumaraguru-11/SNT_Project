@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import Image from "next/image";
 
-const ProductDetail = ({ visible, setVisible, productId }) => {
+const ProductDetail = ({ visible, setVisible, product }) => {
   return (
     <div className="card flex justify-content-center">
       <button
@@ -25,7 +25,7 @@ const ProductDetail = ({ visible, setVisible, productId }) => {
         <div className="flex-box">
           <div className="flex-1">
             <Image
-              src={`/assest/${productId}`}
+              src={`/assest/${product.id}.jpg`}
               width={1000}
               height={1000}
               alt="img"
@@ -38,7 +38,7 @@ const ProductDetail = ({ visible, setVisible, productId }) => {
             style={{ padding: "0rem 1.5rem" }}
           >
             <div>
-              <h2 className="text-2xl font-bold">Product 1</h2>
+              <h2 className="text-2xl font-bold">{product.productName}</h2>
               <p className="text-sm">
                 {/* <i>⭐⭐⭐⭐⭐</i>{" "}
                 <span className="text-sm font-semibold">20 reviews</span> */}
@@ -48,7 +48,7 @@ const ProductDetail = ({ visible, setVisible, productId }) => {
 
             <div className="mt-5">
               <p className="text-xl">Quantity- 500g</p>
-              <p className="text-xl">&#8377; 150</p>
+              <p className="text-xl">&#8377; {product.price}</p>
             </div>
 
             <div className="flex flex-col mt-5">

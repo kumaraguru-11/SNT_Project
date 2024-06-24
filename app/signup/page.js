@@ -148,9 +148,8 @@ const SignUp = () => {
     }
 
     const payload = {
-      username: values.firstname, // Adjust according to how you want to set the username
+      username: values.firstname + values.lastname, // Adjust according to how you want to set the username
       password: values.password,
-      confirmPassword: values.confirmpassword,
       email: values.email,
       roles: [
         {
@@ -162,8 +161,16 @@ const SignUp = () => {
     try {
       const response = await registerUser(payload);
       console.log(response);
-      alert("Registration completed successfully");
-      route.push('/')
+      // Clear all fields after successful registration
+      setFields((prevFields) =>
+        prevFields.map((field) => ({
+          ...field,
+          value: "", // Reset each field's value to an empty string
+          hasError: false, // Reset error states
+          error: "", // Clear any error messages
+        }))
+      );
+      route.push("/");
     } catch (error) {
       console.error(error);
       alert("Error during registration: " + error.message);

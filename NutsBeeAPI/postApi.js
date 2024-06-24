@@ -48,4 +48,21 @@ export const emailOTP = async (payload) => {
     throw new Error(error.message);
   }
 };
+export const AddtoCart = async (payload) => {
+  try {
+    const res = await axios.post(
+        `https://nutsbee-1.onrender.com/nutsBee/cart?userId=${payload.userId}&productId=${payload.productId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: payload.auth,
+          },
+        }
+      );
+    return res.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 

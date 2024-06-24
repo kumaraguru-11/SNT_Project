@@ -4,6 +4,7 @@ import "./globals.css";
 import "./prime-react.css";
 import Header from "../component/Header";
 import GoToTop from "@/component/GoToTop";
+import RecoilContextProvider from "../recoilstore/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,20 +21,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <link rel='icon' href='/favicon.ico' /> 
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={inter.className}>
-        <div className="min-h-100vh h-full w-full flex flex-col text-orange-500 md:px-10 ">
-          <Header />
-          <GoToTop />
+        <RecoilContextProvider>
+          <div className="min-h-100vh h-full w-full flex flex-col text-orange-500 md:px-10 ">
+            <Header />
+            <GoToTop />
 
-          <main
-            // className="mt-2 transition-transform duration-300 p-0 flex-1 overflow-hidden bg-gray-300"
-            className="flex-1 p-1"
-          >
-            {children}
-          </main>
-        </div>
+            <main
+              // className="mt-2 transition-transform duration-300 p-0 flex-1 overflow-hidden bg-gray-300"
+              className="flex-1 p-1"
+            >
+              {children}
+            </main>
+          </div>
+        </RecoilContextProvider>
       </body>
     </html>
   );

@@ -1,100 +1,149 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Carousel from "../component/Carousel";
-import axios from "axios";
 import ProductDetail from "../component/ProductDetail";
-import { Dialog } from "primereact/dialog";
+import axios from "axios";
 import LoginField from "../component/LoginField";
+import { Dialog } from "primereact/dialog";
+import { getOtp } from "@/NutsBeeAPI/getApi";
+import { AddtoCart } from "@/NutsBeeAPI/postApi";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { authKey, email, userInfo } from "../recoilstore/store";
 
 const main = () => {
   //! SINGLE PRODUCT DIALOG BOX
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(false);
-  const [productId, setProductId] = useState();
+  const [product, setProduct] = useState({});
 
-  const handleProductDetail = (id) => {
+  const [userDetails, setUserDetails] = useRecoilState(userInfo);
+  const auth = useRecoilValue(authKey);
+  const useremail = useRecoilValue(email);
+
+  const [productList, setProductList] = useState([]);
+
+  const handleProductDetail = (val) => {
     setVisible(true);
-    setProductId(id);
+    setProduct(val);
   };
 
-  const arr = [
-    {
-      title: "Brown eggs",
-      type: "dairy",
-      description: "Raw organic brown eggs in a basket",
-      filename: "0.jpg",
-      height: 600,
-      width: 400,
-      price: 28.1,
-      rating: 4,
-    },
-    {
-      title: "Sweet fresh stawberry",
-      type: "fruit",
-      description: "Sweet fresh stawberry on the wooden table",
-      filename: "1.jpg",
-      height: 450,
-      width: 299,
-      price: 29.45,
-      rating: 4,
-    },
-    {
-      title: "Asparagus",
-      type: "vegetable",
-      description: "Asparagus with ham on the wooden table",
-      filename: "2.jpg",
-      height: 450,
-      width: 299,
-      price: 18.95,
-      rating: 3,
-    },
-    {
-      title: "Green smoothie",
-      type: "dairy",
-      description:
-        "Glass of green smoothie with quail egg's yolk, served with cocktail tube, green apple and baby spinach leaves over tin surface.",
-      filename: "3.jpg",
-      height: 600,
-      width: 399,
-      price: 17.68,
-      rating: 4,
-    },
-    {
-      title: "Raw legums",
-      type: "vegetable",
-      description: "Raw legums on the wooden table",
-      filename: "4.jpg",
-      height: 450,
-      width: 299,
-      price: 17.11,
-      rating: 2,
-    },
-  ];
-  const router = useRouter();
+  // const arr = [
+  //   {
+  //     title: "Brown eggs",
+  //     type: "dairy",
+  //     description: "Raw organic brown eggs in a basket",
+  //     filename: "0.jpg",
+  //     height: 600,
+  //     width: 400,
+  //     price: 28.1,
+  //     rating: 4,
+  //   },
+  //   {
+  //     title: "Sweet fresh stawberry",
+  //     type: "fruit",
+  //     description: "Sweet fresh stawberry on the wooden table",
+  //     filename: "1.jpg",
+  //     height: 450,
+  //     width: 299,
+  //     price: 29.45,
+  //     rating: 4,
+  //   },
+  //   {
+  //     title: "Asparagus",
+  //     type: "vegetable",
+  //     description: "Asparagus with ham on the wooden table",
+  //     filename: "2.jpg",
+  //     height: 450,
+  //     width: 299,
+  //     price: 18.95,
+  //     rating: 3,
+  //   },
+  //   {
+  //     title: "Green smoothie",
+  //     type: "dairy",
+  //     description:
+  //       "Glass of green smoothie with quail egg's yolk, served with cocktail tube, green apple and baby spinach leaves over tin surface.",
+  //     filename: "3.jpg",
+  //     height: 600,
+  //     width: 399,
+  //     price: 17.68,
+  //     rating: 4,
+  //   },
+  //   {
+  //     title: "Raw legums",
+  //     type: "vegetable",
+  //     description: "Raw legums on the wooden table",
+  //     filename: "4.jpg",
+  //     height: 450,
+  //     width: 299,
+  //     price: 17.11,
+  //     rating: 2,
+  //   },
+  // ];
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "https://nutsbee-1.onrender.com/nutsBee/products",
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization:
-  //               "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVc2VyIERldGFpbHMiLCJpc3MiOiJFdmVudCBTY2hlZHVsZXIiLCJleHAiOjE3MTgzNTQxNjksImlhdCI6MTcxODM1MzU2OSwiZW1haWwiOiJyYW1AZ21haWwuY29tIn0.WIHiin9moloZJpJTOiJEQsy86klZrV7inK2rrRDwYow",
-  //           },
-  //         }
-  //       );
-  //       console.log(response.data);
-  //     } catch (error) {
-  //       console.error(error.message);
-  //     }
-  //   };
+  //fetch User Details
+  useEffect(() => {
+    // Check if both email and auth have values
+    if (useremail.length > 0 && auth) {
+      const payload = {
+        email: useremail,
+        auth: auth.Authorization,
+      };
 
-  //   fetchData();
-  // }, []);
+      const fetchData = async () => {
+        try {
+          const res = await getOtp(payload);
+          setUserDetails(res);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [auth, useremail]);
+
+  //fetch products
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://nutsbee-1.onrender.com/nutsBee/products",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: auth.Authorization,
+            },
+          }
+        );
+        setProductList(response.data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const addingCart = async (id) => {
+    const payload = {
+      userId: userDetails.id,
+      auth: auth.Authorization,
+      productId: id,
+    };
+    try {
+      const res = AddtoCart(payload);
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDialog = (e, val) => {
+    e.stopPropagation();
+    auth ? addingCart(val.id) : setShow(true);
+  };
 
   return (
     <div className="container mx-auto p-5">
@@ -102,49 +151,49 @@ const main = () => {
         <Carousel />
       </div>
       <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {arr.map((val) => (
-          <>
-            <div
-              className="card border rounded-lg shadow-lg overflow-hidden"
-              key={val.title}
-              // onClick={() => router.push("/products/productDetail")}
-              onClick={() => handleProductDetail(val.filename)}
-            >
-              <Image
-                className="product-img"
-                src={`/assest/${val.filename}`}
-                alt="Product Image 1"
-                width={300}
-                height={120}
-                priority
-                // layout="responsive"
-              />
-              <div className="p-5 text-center">
-                <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
-                  {val.title}
-                </h2>
-                <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
-                <button
-                  className="bg-orange-500 text-white py-2 px-4 rounded"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShow(true);
-                  }}
-                >
-                  Add To Cart
-                </button>
+        {productList &&
+          productList.map((val) => (
+            <>
+              <div
+                className="card border rounded-lg shadow-lg overflow-hidden"
+                key={val.id}
+                onClick={() => handleProductDetail(val)}
+              >
+                <Image
+                  className="product-img"
+                  src={`/assest/${val.id}.jpg`}
+                  alt="Product Image 1"
+                  width={300}
+                  height={120}
+                  priority
+                />
+                <div className="p-5 text-center">
+                  <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
+                    {val.productName}
+                  </h2>
+                  <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
+                  <button
+                    className="bg-orange-500 text-white py-2 px-4 rounded"
+                    onClick={(e) => {
+                      handleDialog(e, val);
+                    }}
+                  >
+                    Add To Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          </>
-        ))}
+            </>
+          ))}
       </div>
-      {/* show the product details dialog box*/}
-      <ProductDetail
-        visible={visible}
-        setVisible={setVisible}
-        productId={productId}
-      />
-      {/* show logIn dialog box if the user cannot login the website */}
+      {/* products details dialog box */}
+      {productList.length > 0 && (
+        <ProductDetail
+          visible={visible}
+          setVisible={setVisible}
+          product={product}
+        />
+      )}
+      {/* login dialog box */}
       <Dialog
         header=""
         visible={show}

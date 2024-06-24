@@ -1,68 +1,76 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Image from "next/image";
+import { getCartItems } from "@/NutsBeeAPI/getApi";
+import { userInfo, authKey } from "@/recoilstore/store";
+import { useRecoilValue } from "recoil";
 
 const Cart = () => {
   //!fake data
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      image: "/assest/0.jpg",
-      price: 10,
-      quantity: 2,
-      total: 20,
-      category: "dryfruits",
-      product: "Dates",
-    },
-    {
-      id: 2,
-      image: "/assest/1.jpg",
-      price: 15,
-      quantity: 1,
-      total: 15,
-      category: "sweets",
-      product: "chocolate",
-    },
-    {
-      id: 3,
-      image: "/assest/0.jpg",
-      price: 10,
-      quantity: 2,
-      total: 20,
-      category: "dryfruits",
-      product: "Dates",
-    },
-    {
-      id: 4,
-      image: "/assest/1.jpg",
-      price: 15,
-      quantity: 1,
-      total: 15,
-      category: "sweets",
-      product: "chocolate",
-    },
-    {
-      id: 5,
-      image: "/assest/0.jpg",
-      price: 10,
-      quantity: 2,
-      total: 20,
-      category: "dryfruits",
-      product: "Dates",
-    },
-    {
-      id: 6,
-      image: "/assest/1.jpg",
-      price: 15,
-      quantity: 1,
-      total: 15,
-      category: "sweets",
-      product: "chocolate",
-    },
-  ]);
+  // const [products, setProducts] = useState([
+  //   {
+  //     id: 1,
+  //     image: "/assest/0.jpg",
+  //     price: 10,
+  //     quantity: 2,
+  //     total: 20,
+  //     category: "dryfruits",
+  //     product: "Dates",
+  //   },
+  //   {
+  //     id: 2,
+  //     image: "/assest/1.jpg",
+  //     price: 15,
+  //     quantity: 1,
+  //     total: 15,
+  //     category: "sweets",
+  //     product: "chocolate",
+  //   },
+  //   {
+  //     id: 3,
+  //     image: "/assest/0.jpg",
+  //     price: 10,
+  //     quantity: 2,
+  //     total: 20,
+  //     category: "dryfruits",
+  //     product: "Dates",
+  //   },
+  //   {
+  //     id: 4,
+  //     image: "/assest/1.jpg",
+  //     price: 15,
+  //     quantity: 1,
+  //     total: 15,
+  //     category: "sweets",
+  //     product: "chocolate",
+  //   },
+  //   {
+  //     id: 5,
+  //     image: "/assest/0.jpg",
+  //     price: 10,
+  //     quantity: 2,
+  //     total: 20,
+  //     category: "dryfruits",
+  //     product: "Dates",
+  //   },
+  //   {
+  //     id: 6,
+  //     image: "/assest/1.jpg",
+  //     price: 15,
+  //     quantity: 1,
+  //     total: 15,
+  //     category: "sweets",
+  //     product: "chocolate",
+  //   },
+  // ]);
+
+  const Id = useRecoilValue(userInfo);
+  const auth = useRecoilValue(authKey);
+
+  const [products, setProducts] = useState([]);
 
   const handleIncrement = (id) => {
     setProducts((prevProducts) =>
@@ -96,11 +104,31 @@ const Cart = () => {
     setProducts(updatedProducts);
   };
 
-  const subtotal = products.reduce((acc, state) => {
-    return acc + state.total;
-  }, 0);
-  const tax = subtotal * (10 / 100);
+  useEffect(() => {
+    const payload = {
+      userId: Id.id,
+      auth: auth.Authorization,
+    };
+    const fetch = async () => {
+      try {
+        const res = getCartItems(payload);
+        console.log(res, "cartItems");
+        setProducts(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    fetch();
+  }, []);
+
+  // const subtotal = products.reduce((acc, state) => {
+  //   return acc + state.total;
+  // }, 0);
+  // const tax = subtotal * (10 / 100);
+
+  const subtotal=100;
+  const tax=10
   //!Below functions are the templates for the tabel.
   const imageBodyTemplate = (val) => {
     return (
@@ -159,7 +187,7 @@ const Cart = () => {
   };
 
   return (
-    <div style={{minHeight:"100%",height:"90vh"}}>
+    <div style={{ minHeight: "100%", height: "90vh" }}>
       <div className="text-4xl font-extrabold">My Cart</div>
       <div className="gap-2 cart-list">
         {/* Tabel */}
@@ -168,7 +196,7 @@ const Cart = () => {
             value={products}
             header=""
             footer=""
-            tableStyle={{ maxWidth: "60rem" ,backgroundColor:"transparent"}}
+            tableStyle={{ maxWidth: "60rem", backgroundColor: "transparent" }}
           >
             <Column header="Product" body={imageBodyTemplate}></Column>
             <Column header="Price" body={priceBodyTemplate}></Column>
