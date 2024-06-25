@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const host='https://nutsbee-1.onrender.com'
+
 export const getOtp = async (payload) => {
   try {
     const res = await axios.get(
-      `https://nutsbee-1.onrender.com/nutsBee/users?email=${payload.email}`,
+      `${host}/nutsBee/users?email=${payload.email}`,
       {
         headers: {
           Authorization: payload.auth,
@@ -13,13 +15,12 @@ export const getOtp = async (payload) => {
 
     return res.data;
   } catch (error) {
-    throw new Error(error.message);
-  }
+    return error.message;  }
 };
 export const reSentOtp = async (payload) => {
   try {
     const res = await axios.get(
-      `https://nutsbee-1.onrender.com/user/resendOtp?email=${payload.email}`,
+      `${host}/user/resendOtp?email=${payload.email}`,
       {
         headers: {
           Authorization: payload.auth,
@@ -29,16 +30,15 @@ export const reSentOtp = async (payload) => {
 
     return res.data;
   } catch (error) {
-    throw new Error(error.message);
-  }
+    return error.message;  }
 };
 
 export const getCartItems = async (payload) => {
   try {
     const res = await axios.get(
-      `https://nutsbee-1.onrender.com/nutsBee/cart?userId=${payload.userId}`,
+      `${host}/nutsBee/cart?userId=${payload.userId}`,
       {
-        header: {
+        headers: {
           Authorization: payload.auth,
         },
       }
@@ -46,6 +46,6 @@ export const getCartItems = async (payload) => {
 
     return res.data
   } catch (error) {
-    throw new Error(error.message);
+    return error.message;
   }
 };

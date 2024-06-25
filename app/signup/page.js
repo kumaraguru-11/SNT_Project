@@ -1,12 +1,11 @@
 "use client";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import "primeicons/primeicons.css";
-import Image from "next/image";
 import Link from "next/link";
 import { validateFields } from "../../component/validation";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/NutsBeeAPI/postApi";
+import Loader from "../../component/Loader";
 
 const SignUp = () => {
   const route = useRouter();
@@ -58,6 +57,8 @@ const SignUp = () => {
       error: "",
     },
   ]);
+
+  const [loading, setLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState({
     password: false,
@@ -159,6 +160,7 @@ const SignUp = () => {
     };
 
     try {
+      setLoading(true);
       const response = await registerUser(payload);
       console.log(response);
       // Clear all fields after successful registration
@@ -170,15 +172,27 @@ const SignUp = () => {
           error: "", // Clear any error messages
         }))
       );
+      setLoading(false);
       route.push("/");
     } catch (error) {
       console.error(error);
-      alert("Error during registration: " + error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  //button disable
+  const isButtonDisabled = () => {
+    return (
+      loading ||
+      fields.some((field) => field.value.length === 0 || field.hasError)
+    );
   };
 
   return (
     <div className="h-full w-full flex items-center justify-center py-3">
+      {loading && <Loader />}
       <div className="w-10/12 md:w-7/12 p-4 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
         <div className="hidden sm:flex sm:flex-1 relative border-r-2">
           <h1 className="text-5xl font-black text-orange-300 absolute top-72 left-3 transform -rotate-90 origin-top-left tracking-widest">
@@ -253,6 +267,8 @@ const SignUp = () => {
             <button
               onClick={(e) => handleSubmit(e)}
               className="mt-4 px-4 py-2 w-full rounded bg-orange-500 text-white hover:bg-white hover:text-orange-500"
+              disabled={isButtonDisabled()}
+              style={{ cursor: isButtonDisabled() ? "not-allowed" : "pointer" }}
             >
               Sign Up
             </button>

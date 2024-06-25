@@ -10,12 +10,15 @@ import { getOtp } from "@/NutsBeeAPI/getApi";
 import { AddtoCart } from "@/NutsBeeAPI/postApi";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { authKey, email, userInfo } from "../recoilstore/store";
+import Loader from "../component/Loader";
 
 const main = () => {
   //! SINGLE PRODUCT DIALOG BOX
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(false);
   const [product, setProduct] = useState({});
+
+  const [loading, setLoading] = useState(false);
 
   const [userDetails, setUserDetails] = useRecoilState(userInfo);
   const auth = useRecoilValue(authKey);
@@ -107,19 +110,23 @@ const main = () => {
   //fetch products
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
-          "https://nutsbee-1.onrender.com/nutsBee/products",
+          "https://nutsbee-1.onrender.com/nutsBee/productsList",
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: auth.Authorization,
             },
           }
         );
+        setLoading(false);
         setProductList(response.data);
       } catch (error) {
         console.error(error.message);
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -147,44 +154,49 @@ const main = () => {
 
   return (
     <div className="container mx-auto p-5">
-      <div>
-        <Carousel />
-      </div>
-      <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {productList &&
-          productList.map((val) => (
-            <>
-              <div
-                className="card border rounded-lg shadow-lg overflow-hidden"
-                key={val.id}
-                onClick={() => handleProductDetail(val)}
-              >
-                <Image
-                  className="product-img"
-                  src={`/assest/${val.id}.jpg`}
-                  alt="Product Image 1"
-                  width={300}
-                  height={120}
-                  priority
-                />
-                <div className="p-5 text-center">
-                  <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
-                    {val.productName}
-                  </h2>
-                  <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
-                  <button
-                    className="bg-orange-500 text-white py-2 px-4 rounded"
-                    onClick={(e) => {
-                      handleDialog(e, val);
-                    }}
+      {loading && <Loader />}
+      {!loading &&
+        <>
+          <div>
+            <Carousel />
+          </div>
+          <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {productList &&
+              productList.map((val) => (
+                <>
+                  <div
+                    className="card border rounded-lg shadow-lg overflow-hidden"
+                    key={val.id}
+                    onClick={() => handleProductDetail(val)}
                   >
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
-            </>
-          ))}
-      </div>
+                    <Image
+                      className="product-img"
+                      src={`/assest/${val.id}.jpg`}
+                      alt="Product Image 1"
+                      width={300}
+                      height={120}
+                      priority
+                    />
+                    <div className="p-5 text-center">
+                      <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
+                        {val.productName}
+                      </h2>
+                      <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
+                      <button
+                        className="bg-orange-500 text-white py-2 px-4 rounded"
+                        onClick={(e) => {
+                          handleDialog(e, val);
+                        }}
+                      >
+                        Add To Cart
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ))}
+          </div>
+        </>
+      }
       {/* products details dialog box */}
       {productList.length > 0 && (
         <ProductDetail

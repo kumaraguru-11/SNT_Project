@@ -66,12 +66,16 @@ const Header = () => {
 
   return (
     <header
-      className="top-0 z-10 flex items-center"
+      // className="flex items-center"
       style={{
         height: "6rem",
         position: "sticky",
         backgroundColor: "white",
         borderBottom: "2px solid orange",
+        top:"0",
+        zIndex:"10",
+        display:'flex',
+        justifyContent:"center"
       }}
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-8">
@@ -80,9 +84,13 @@ const Header = () => {
             src="/logo-2.jpg"
             alt="Logo"
             className="icon"
-            width={70}
+            width={80}
             height={40}
-            style={{ marginRight: "1rem", height: "auto" }}
+            style={{
+              marginRight: "1rem",
+              height: "auto",
+              mixBlendMode: "multiply",
+            }}
           />
           <span className="text-orange-600 text-2xl font-bold">NUTSBEE</span>
         </div>

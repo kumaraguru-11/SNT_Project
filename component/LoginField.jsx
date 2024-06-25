@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "@/NutsBeeAPI/postApi";
 import { useRecoilState } from "recoil";
 import { authKey, email } from "../recoilstore/store";
+import Loader from "../component/Loader";
 
 const Login_Field = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const usernameRef = useRef();
   const passwordRef = useRef();
   const route = useRouter();
@@ -56,10 +58,12 @@ const Login_Field = () => {
     }
 
     try {
+      setLoading(true);
       const response = await loginUser(values);
       if (response.status === 201 || response.status === 200) {
         setAuth(response.data);
         setUserEmail(values.email);
+        setLoading(false);
         route.push("/");
       } else {
         alert(
@@ -69,7 +73,10 @@ const Login_Field = () => {
         );
       }
     } catch (error) {
-      alert("Error during registration: " + error.message);
+      // alert("Error during registration: " + error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,8 +115,17 @@ const Login_Field = () => {
   const handlePasswordVisibility = useCallback(() => {
     setShowPassword(!showPassword);
   }, [showPassword]);
+
+  //button disable
+  const isButtonDisabled = () => {
+    return (
+      loading ||
+      fields.some((field) => field.value.length === 0 || field.hasError)
+    );
+  };
   return (
-    <div>
+    <div style={{ opacity: loading ? ".4" : "1" }}>
+      {loading && <Loader />}
       <h2 className="text-2xl font-bold text-orange-500 mb-2">Welcome!</h2>
       <p className="mb-2">
         Don't have an acount?{" "}
@@ -133,6 +149,7 @@ const Login_Field = () => {
             }}
             ref={usernameRef}
             onKeyDown={(e) => handleKeyDown(e, passwordRef, null)}
+            disabled={loading}
           />
           <label className="float-label-text">Email</label>
           {fields[0].hasError && (
@@ -153,6 +170,7 @@ const Login_Field = () => {
             }}
             ref={passwordRef}
             onKeyDown={(e) => handleKeyDown(e, null, usernameRef)}
+            disabled={loading}
           />
           <label className="float-label-text">password</label>
           {showPassword ? (
@@ -185,6 +203,8 @@ const Login_Field = () => {
         <button
           className="mt-4 px-4 py-2 rounded-md bg-orange-500 text-white hover:bg-white hover:text-orange-500 w-full"
           onClick={(e) => handleSubmit(e)}
+          disabled={isButtonDisabled()}
+          style={{ cursor: isButtonDisabled() ? "not-allowed" : "pointer" }}
         >
           login
         </button>
