@@ -9,7 +9,7 @@ import { Dialog } from "primereact/dialog";
 import { getOtp } from "@/NutsBeeAPI/getApi";
 import { AddtoCart } from "@/NutsBeeAPI/postApi";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { authKey, email, userInfo } from "../recoilstore/store";
+import { authKey, email, userInfo, cartParams } from "../recoilstore/store";
 import Loader from "../component/Loader";
 
 const main = () => {
@@ -21,6 +21,7 @@ const main = () => {
   const [loading, setLoading] = useState(false);
 
   const [userDetails, setUserDetails] = useRecoilState(userInfo);
+  const [cart, setCart] = useRecoilState(cartParams);
   const auth = useRecoilValue(authKey);
   const useremail = useRecoilValue(email);
 
@@ -98,6 +99,7 @@ const main = () => {
         try {
           const res = await getOtp(payload);
           setUserDetails(res);
+          setCart(res.cartItems)
         } catch (error) {
           console.error(error);
         }
@@ -140,8 +142,15 @@ const main = () => {
       productId: id,
     };
     try {
-      const res = AddtoCart(payload);
-      console.log(res);
+      const res = await AddtoCart(payload);
+      console.log(res, "console from landing page");
+      setCart((prev) => {
+        const itemExists = prev.some((val) => val.itemId === res.itemId);
+        if (!itemExists) {
+          return [...prev, res];
+        }
+        return prev;
+      });
     } catch (error) {
       console.error(error);
     }
@@ -155,7 +164,7 @@ const main = () => {
   return (
     <div className="container mx-auto p-5">
       {loading && <Loader />}
-      {!loading &&
+      {!loading && (
         <>
           <div>
             <Carousel />
@@ -196,7 +205,7 @@ const main = () => {
               ))}
           </div>
         </>
-      }
+      )}
       {/* products details dialog box */}
       {productList.length > 0 && (
         <ProductDetail
@@ -215,7 +224,7 @@ const main = () => {
           setShow(false);
         }}
       >
-        <LoginField />
+        <LoginField setShow={setShow} />
       </Dialog>
     </div>
   );

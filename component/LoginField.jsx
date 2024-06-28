@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 import { authKey, email } from "../recoilstore/store";
 import Loader from "../component/Loader";
 
-const Login_Field = () => {
+const Login_Field = ({ setShow }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const usernameRef = useRef();
@@ -63,8 +63,18 @@ const Login_Field = () => {
       if (response.status === 201 || response.status === 200) {
         setAuth(response.data);
         setUserEmail(values.email);
+        // Clear all fields after successful registration
+        setFields((prevFields) =>
+          prevFields.map((field) => ({
+            ...field,
+            value: "", // Reset each field's value to an empty string
+            hasError: false, // Reset error states
+            error: "", // Clear any error messages
+          }))
+        );
         setLoading(false);
         route.push("/");
+        setShow(false);
       } else {
         alert(
           `Error during registration: ${
@@ -125,7 +135,6 @@ const Login_Field = () => {
   };
   return (
     <div style={{ opacity: loading ? ".4" : "1" }}>
-      {loading && <Loader />}
       <h2 className="text-2xl font-bold text-orange-500 mb-2">Welcome!</h2>
       <p className="mb-2">
         Don't have an acount?{" "}
@@ -209,6 +218,7 @@ const Login_Field = () => {
           login
         </button>
       </div>
+      {loading && <Loader />}
       {/* <div className="flex flex-col-reverse gap-3 justify-between items-center mt-3">
             <div>
               <div className="flex items-center">

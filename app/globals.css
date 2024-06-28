@@ -77,12 +77,6 @@ primereact;
   color: #f97316;
 }
 
-/* set Image width */
-/* .icon {
-  width: auto;
-  height: auto;
-} */
-
 /*  gototop Button style */
 .hover_links a:hover {
   background-color: #f97316;
@@ -156,6 +150,10 @@ primereact;
   background-color: antiquewhite;
   box-shadow: 5px 5px 5px 5px #9a9595;
   border-radius: 10px;
+}
+
+.header-head {
+  display: flex;
 }
 
 /*carousel component */
@@ -253,6 +251,16 @@ primereact;
   padding: 1.5rem 1rem;
 }
 
+/* header cart-icon badge */
+.p-badge {
+  background-color: #f97316;
+  font-size: 0.75rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  text-align: center;
+  line-height: 1.25rem;
+}
+
 .coupon-input {
   border: none;
 }
@@ -268,6 +276,18 @@ primereact;
   display: flex;
   gap: 4;
   justify-content: space-between;
+}
+
+/* profile page */
+.p-avatar.p-avatar-xl {
+  width: 10rem;
+  height: 10rem;
+  font-size: 5rem;
+}
+
+.container-con {
+  display: flex;
+  gap: 5px;
 }
 
 @media screen and (max-width: 1024px) {
@@ -289,6 +309,16 @@ primereact;
   .Nav-list-2 {
     display: flex;
   }
+  .container-con {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.p-overlay-badge .p-badge {
+  position: absolute;
+  top: 5px;
+  right: 4px;
 }
 
 @media screen and (max-width: 700px) {
@@ -296,5 +326,8 @@ primereact;
     display: flex;
     flex-direction: column;
     margin: 0.5rem 0;
+  }
+  .header-head {
+    display: none;
   }
 }

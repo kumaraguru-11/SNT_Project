@@ -4,20 +4,10 @@ import "primeicons/primeicons.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ListBox } from "primereact/listbox";
+import { Badge } from "primereact/badge";
+import { cartParams } from "@/recoilstore/store";
+import { useRecoilValue } from "recoil";
 import Image from "next/image";
-
-//!Header icon
-const HeaderIcon = ({ iconClass, active, onClick }) => (
-  <i
-    className={`${iconClass} cursor-pointer p-3 font-medium`}
-    style={{
-      borderRadius: "50%",
-      backgroundColor: active ? "#f97316" : "",
-      color: active ? "white" : "",
-    }}
-    onClick={onClick}
-  ></i>
-);
 
 //!Header list
 const NavLink = ({ href, children }) => (
@@ -35,6 +25,8 @@ const Header = () => {
   });
   const [selecteduser, setSelectedUser] = useState(null);
   const router = useRouter();
+
+  const cart = useRecoilValue(cartParams);
 
   //!icon Active function
   const handleToggle = (key) => {
@@ -72,27 +64,29 @@ const Header = () => {
         position: "sticky",
         backgroundColor: "white",
         borderBottom: "2px solid orange",
-        top:"0",
-        zIndex:"10",
-        display:'flex',
-        justifyContent:"center"
+        top: "0",
+        zIndex: "10",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-8">
         <div className="flex items-center">
           <img
-            src="/logo-2.jpg"
+            src="/logo-rm-bg.png"
             alt="Logo"
             className="icon"
-            width={80}
-            height={40}
+            width={100}
+            height={60}
             style={{
               marginRight: "1rem",
               height: "auto",
               mixBlendMode: "multiply",
             }}
           />
-          <span className="text-orange-600 text-2xl font-bold">NUTSBEE</span>
+          <span className="text-orange-600 text-2xl font-bold header-head">
+            NUTSBEE
+          </span>
         </div>
         <nav className="nav-list">
           <NavLink href="/">All products</NavLink>
@@ -100,26 +94,45 @@ const Header = () => {
           <NavLink href="#">Contact us</NavLink>
         </nav>
         <div className="flex items-center h-icon">
-          <HeaderIcon
-            iconClass="pi pi-search"
-            active={toggle.search}
+          <i
+            className="pi pi-search cursor-pointer p-3 font-medium"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: toggle.search ? "#f97316" : "",
+              color: toggle.search ? "white" : "",
+            }}
             onClick={() => handleToggle("search")}
-          />
-          <HeaderIcon
-            iconClass="pi pi-shopping-cart"
-            active={toggle.cart}
+          ></i>
+          <i
+            className="pi pi-shopping-cart cursor-pointer p-3 font-medium relative p-overlay-badge
+            "
+            style={{
+              borderRadius: "50%",
+              backgroundColor: toggle.cart ? "#f97316" : "",
+              color: toggle.cart ? "white" : "",
+            }}
             onClick={() => handleToggle("cart")}
-          />
-          <HeaderIcon
-            iconClass="pi pi-user"
-            active={toggle.user}
+          >
+            {cart.length > 0 && <Badge value={cart.length}></Badge>}
+          </i>
+          <i
+            className="pi pi-user cursor-pointer p-3 font-medium"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: toggle.user ? "#f97316" : "",
+              color: toggle.user ? "white" : "",
+            }}
             onClick={() => handleToggle("user")}
-          />
-          <HeaderIcon
-            iconClass="pi pi-bars"
-            active={toggle.hamburger}
+          ></i>
+          <i
+            className="pi pi-bars cursor-pointer p-3 font-medium"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: toggle.hamburger ? "#f97316" : "",
+              color: toggle.hamburger ? "white" : "",
+            }}
             onClick={() => handleToggle("hamburger")}
-          />
+          ></i>
         </div>
       </div>
       {toggle.search && (

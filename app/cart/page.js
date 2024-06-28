@@ -7,8 +7,8 @@ import Image from "next/image";
 import { getCartItems } from "@/NutsBeeAPI/getApi";
 import { patchCart } from "../../NutsBeeAPI/patchApi";
 import { deleteCart } from "../../NutsBeeAPI/deleteApi";
-import { userInfo, authKey } from "@/recoilstore/store";
-import { useRecoilValue } from "recoil";
+import { userInfo, authKey, cartParams } from "@/recoilstore/store";
+import { useRecoilValue, useRecoilState } from "recoil";
 
 const Cart = () => {
   //!fake data
@@ -71,6 +71,7 @@ const Cart = () => {
 
   const Id = useRecoilValue(userInfo);
   const auth = useRecoilValue(authKey);
+  const [cart, setCart] = useRecoilState(cartParams);
 
   const [products, setProducts] = useState([]);
 
@@ -127,10 +128,11 @@ const Cart = () => {
     }
   };
 
-  const handleDeleteCart = async (id) => {
+  const handleDeleteCart = async (id,itemId) => {
     const updatedProducts = products.filter((el) => el.id !== id);
+    const updatedCart = cart && cart.filter((el) => el.itemId !== itemId);
     setProducts(updatedProducts);
-
+    setCart(updatedCart);
     const payload = {
       cartId: id,
       auth: auth.Authorization,
@@ -159,10 +161,12 @@ const Cart = () => {
     }
   }, [auth, Id]);
 
-  const subtotal = products.reduce((acc, state) => {
-    return acc + state.price * state.quantity;
-  }, 0);
-  const tax = subtotal * (10 / 100);
+  const subtotal =
+    products.length > 0 &&
+    products.reduce((acc, state) => {
+      return acc + state.price * state.quantity;
+    }, 0);
+  const tax = subtotal && subtotal * (10 / 100);
 
   // const subtotal = 100;
   // const tax = 10;
@@ -219,7 +223,7 @@ const Cart = () => {
     return (
       <i
         className="pi pi-times-circle cursor-pointer"
-        onClick={() => handleDeleteCart(val.id)}
+        onClick={() => handleDeleteCart(val.id,val.itemId)}
       ></i>
     );
   };
@@ -230,7 +234,7 @@ const Cart = () => {
       {products.length === 0 && (
         <div className="flex justify-center flex-col items-center">
           <img src="/emptycart.png" alt="NoCart" height={80} width={280} />
-          <span>NO Cart</span>
+          <span>No Cart</span>
         </div>
       )}
       {products.length > 0 && (

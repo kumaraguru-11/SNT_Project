@@ -21,5 +21,5 @@ export const userInfo=atom({
 })
 export const cartParams=atom({
   key:"cartParams",
-  default:''
+  default:[]
 })
