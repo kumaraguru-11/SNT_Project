@@ -95,6 +95,8 @@ const main = () => {
         auth: auth.Authorization,
       };
 
+      console.log(payload,'from landing page')
+
       const fetchData = async () => {
         try {
           const res = await getOtp(payload);

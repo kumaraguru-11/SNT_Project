@@ -3,6 +3,8 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import "primeicons/primeicons.css";
 import Link from "next/link";
 import { validateFields } from "../../component/validation";
+import { authKey, email } from "@/recoilstore/store";
+import { useRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/NutsBeeAPI/postApi";
 import Loader from "../../component/Loader";
@@ -66,6 +68,10 @@ const SignUp = () => {
   });
 
   const inputRef = useRef([]);
+
+  //store data in recoil
+  const [auth, setAuth] = useRecoilState(authKey);
+  const [userEmail, setUserEmail] = useRecoilState(email);
 
   useEffect(() => {
     if (inputRef.current[0]) {
@@ -149,7 +155,7 @@ const SignUp = () => {
     }
 
     const payload = {
-      username: values.firstname + values.lastname, // Adjust according to how you want to set the username
+      username: values.firstname + " " + values.lastname, // Adjust according to how you want to set the username
       password: values.password,
       email: values.email,
       roles: [
@@ -162,7 +168,9 @@ const SignUp = () => {
     try {
       setLoading(true);
       const response = await registerUser(payload);
-      console.log(response);
+      console.log(response, "signup page", payload.email);
+      setAuth(response);
+      setUserEmail(payload.email);
       // Clear all fields after successful registration
       setFields((prevFields) =>
         prevFields.map((field) => ({

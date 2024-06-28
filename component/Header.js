@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ListBox } from "primereact/listbox";
 import { Badge } from "primereact/badge";
-import { cartParams } from "@/recoilstore/store";
+import { cartParams, authKey } from "@/recoilstore/store";
 import { useRecoilValue } from "recoil";
 import Image from "next/image";
 
@@ -23,10 +23,12 @@ const Header = () => {
     search: false,
     cart: false,
   });
+
   const [selecteduser, setSelectedUser] = useState(null);
   const router = useRouter();
 
   const cart = useRecoilValue(cartParams);
+  const auth = useRecoilValue(authKey);
 
   //!icon Active function
   const handleToggle = (key) => {
@@ -40,6 +42,11 @@ const Header = () => {
 
     if (key === "cart") {
       router.push("/cart");
+    }
+
+    if (key === "user" && !auth) {
+      setToggle({ ...toggle, user: false });
+      router.push("/login");
     }
   };
 
@@ -93,7 +100,7 @@ const Header = () => {
           <NavLink href="#">Categories</NavLink>
           <NavLink href="#">Contact us</NavLink>
         </nav>
-        <div className="flex items-center h-icon">
+        <div className="flex items-center h-icon gap-2">
           <i
             className="pi pi-search cursor-pointer p-3 font-medium"
             style={{
@@ -113,7 +120,7 @@ const Header = () => {
             }}
             onClick={() => handleToggle("cart")}
           >
-            {cart.length > 0 && <Badge value={cart.length}></Badge>}
+            {cart && cart.length > 0 && <Badge value={cart.length}></Badge>}
           </i>
           <i
             className="pi pi-user cursor-pointer p-3 font-medium"
@@ -147,7 +154,7 @@ const Header = () => {
           <NavLink href="#">Contact us</NavLink>
         </nav>
       )}
-      {toggle.user && (
+      {toggle.user === true && auth && (
         <div
           className="absolute bg-white shadow-lg rounded w-48"
           style={{ top: "3.8rem", right: "1.8rem" }}
