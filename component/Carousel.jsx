@@ -14,7 +14,7 @@ const CarouselComponent = () => {
     >
       <div>
         <Image
-          src="/assest/0.jpg"
+          src="/sample.jpg"
           alt="dates"
           className="icon"
           width={1400}

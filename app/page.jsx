@@ -20,6 +20,7 @@ const main = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const auth=useRecoilValue(authKey);
   const [userDetails, setUserDetails] = useRecoilState(userInfo);
   const [cart, setCart] = useRecoilState(cartParams);
   // const auth = useRecoilValue(authKey);
