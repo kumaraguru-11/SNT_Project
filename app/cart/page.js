@@ -128,7 +128,7 @@ const Cart = () => {
     }
   };
 
-  const handleDeleteCart = async (id,itemId) => {
+  const handleDeleteCart = async (id, itemId) => {
     const updatedProducts = products.filter((el) => el.id !== id);
     const updatedCart = cart && cart.filter((el) => el.itemId !== itemId);
     setProducts(updatedProducts);
@@ -162,10 +162,12 @@ const Cart = () => {
   }, [auth, Id]);
 
   const subtotal =
-    products.length > 0 &&
-    products.reduce((acc, state) => {
-      return acc + state.price * state.quantity;
-    }, 0);
+    products.length > 0
+      ? products.reduce(
+          (acc, product) => acc + product.price * product.quantity,
+          0
+        )
+      : 0;
   const tax = subtotal && subtotal * (10 / 100);
 
   // const subtotal = 100;
@@ -223,7 +225,7 @@ const Cart = () => {
     return (
       <i
         className="pi pi-times-circle cursor-pointer"
-        onClick={() => handleDeleteCart(val.id,val.itemId)}
+        onClick={() => handleDeleteCart(val.id, val.itemId)}
       ></i>
     );
   };

@@ -91,6 +91,7 @@ import { useRecoilValue } from "recoil";
 
 const profile = () => {
   const userDetails = useRecoilValue(userInfo);
+  const addresses = userDetails.addresses;
   const username = userDetails.username || "";
   const first = username.slice(0, 1).toUpperCase();
   return (
@@ -163,12 +164,12 @@ const profile = () => {
               <h2 className="text-xl">Shipping Address</h2>
               <section className="leading-8">
                 <div className="grid grid-cols-2 mt-3">
-                  <span className="text-sm text-slate-400">Address</span>
-                  <span>pidari north street</span>
+                  <span className="text-sm text-slate-400 ">Address</span>
+                  <span className="truncate">{`${addresses[0].flatNo},${addresses[0].street},${addresses[0].area}`}</span>
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">City</span>
-                  <span>sirkali</span>
+                  <span>{addresses[0].city}</span>
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">Country</span>
@@ -176,7 +177,7 @@ const profile = () => {
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">Zip code</span>
-                  <span>609110</span>
+                  <span>{addresses[0].pincode}</span>
                 </div>
               </section>
             </div>
