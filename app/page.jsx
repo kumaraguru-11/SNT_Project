@@ -20,11 +20,10 @@ const main = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const auth=useRecoilValue(authKey);
   const [userDetails, setUserDetails] = useRecoilState(userInfo);
   const [cart, setCart] = useRecoilState(cartParams);
-  // const auth = useRecoilValue(authKey);
-  // const useremail = useRecoilValue(email);
+  const auth = useRecoilValue(authKey);
+  const useremail = useRecoilValue(email);
 
   const [productList, setProductList] = useState([]);
 
@@ -89,23 +88,18 @@ const main = () => {
 
   //fetch User Details
   useEffect(() => {
-    // get data from session storage
-
-    const storedAuthData = sessionStorage.getItem("userAuthData") || false;
-
-    if (storedAuthData) {
-      const { authToken, userEmail } = JSON.parse(storedAuthData);
-
+    // Check if both email and auth have values
+    if (useremail.length > 0 && auth) {
       const payload = {
-        email: userEmail,
-        auth: authToken,
+        email: useremail,
+        auth: auth.Authorization,
       };
 
       const fetchData = async () => {
         try {
           const res = await getOtp(payload);
           setUserDetails(res);
-          setCart(res.cartItems);
+          setCart(res.cartItems)
         } catch (error) {
           console.error(error);
         }
@@ -113,7 +107,7 @@ const main = () => {
 
       fetchData();
     }
-  }, []);
+  }, [auth, useremail]);
 
   //fetch products
   useEffect(() => {
@@ -175,7 +169,7 @@ const main = () => {
           <div>
             <Carousel />
           </div>
-          <div className="custom-grid">
+          <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {productList &&
               productList.map((val) => (
                 <>

@@ -61,12 +61,6 @@ const Login_Field = ({ setShow }) => {
       setLoading(true);
       const response = await loginUser(values);
       if (response.status === 201 || response.status === 200) {
-        //store Authrozation and Email in session storage.
-        const authData = {
-          authToken: response.data.Authorization,
-          userEmail: values.email,
-        };
-        sessionStorage.setItem("userAuthData", JSON.stringify(authData));
         setAuth(response.data);
         setUserEmail(values.email);
         // Clear all fields after successful registration
@@ -90,7 +84,6 @@ const Login_Field = ({ setShow }) => {
       }
     } catch (error) {
       // alert("Error during registration: " + error.message);
-      console.log(error)
       setLoading(false);
     } finally {
       setLoading(false);

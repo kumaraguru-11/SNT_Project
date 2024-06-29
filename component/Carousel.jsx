@@ -21,7 +21,6 @@ const CarouselComponent = () => {
           height={400}
           priority
         />
-        <p className="legend">Slide 1</p>
       </div>
       <div>
         <Image
@@ -32,7 +31,6 @@ const CarouselComponent = () => {
           height={400}
           priority
         />
-        <p className="legend">Slide 2</p>
       </div>
       <div>
         <Image
@@ -43,7 +41,6 @@ const CarouselComponent = () => {
           height={400}
           priority
         />
-        <p className="legend">Slide 3</p>
       </div>
     </Carousel>
   );
