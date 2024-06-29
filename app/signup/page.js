@@ -169,7 +169,7 @@ const SignUp = () => {
       setLoading(true);
       const response = await registerUser(payload);
       console.log(response, "signup page", payload.email);
-      setAuth(response);
+      // setAuth(response);
       setUserEmail(payload.email);
       // Clear all fields after successful registration
       setFields((prevFields) =>

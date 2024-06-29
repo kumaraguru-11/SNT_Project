@@ -89,7 +89,9 @@ const Header = () => {
               marginRight: "1rem",
               height: "auto",
               mixBlendMode: "multiply",
+              cursor: "pointer",
             }}
+            onClick={() => router.push("/")}
           />
           <span className="text-orange-600 text-2xl font-bold header-head">
             NUTSBEE

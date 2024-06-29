@@ -25,6 +25,8 @@ const main = () => {
   const auth = useRecoilValue(authKey);
   const useremail = useRecoilValue(email);
 
+  console.log(auth, "<--auth", useremail, "<--email");
+
   const [productList, setProductList] = useState([]);
 
   const handleProductDetail = (val) => {
@@ -95,13 +97,13 @@ const main = () => {
         auth: auth.Authorization,
       };
 
-      console.log(payload,'from landing page')
+      console.log(payload, "<--getuserbyemail");
 
       const fetchData = async () => {
         try {
           const res = await getOtp(payload);
           setUserDetails(res);
-          setCart(res.cartItems)
+          setCart(res.cartItems);
         } catch (error) {
           console.error(error);
         }
@@ -171,7 +173,7 @@ const main = () => {
           <div>
             <Carousel />
           </div>
-          <div className="grid mt-20 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {productList &&
               productList.map((val) => (
                 <>

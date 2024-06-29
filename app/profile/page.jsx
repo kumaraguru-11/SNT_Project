@@ -91,7 +91,8 @@ import { useRecoilValue } from "recoil";
 
 const profile = () => {
   const userDetails = useRecoilValue(userInfo);
-
+  const username = userDetails.username || "";
+  const first = username.slice(0, 1).toUpperCase();
   return (
     <div
       style={{
@@ -107,10 +108,10 @@ const profile = () => {
         style={{ backgroundColor: "#f6dbc3" }}
       >
         <section className="card p-5">
-          <div className="bg-white h-full max-w-96 rounded p-5">
+          <div className="bg-white h-full min-w-96 rounded p-5">
             <div className="flex justify-center">
               <span className="relative mt-10">
-                <Avatar label="P" size="xlarge" shape="circle" />
+                <Avatar label={`${first}`} size="xlarge" shape="circle" />
                 <i
                   className="pi pi-pencil absolute p-3 rounded-full hover:cursor-pointer text-white right-0 top-4"
                   style={{ backgroundColor: "#f97316" }}
@@ -122,14 +123,18 @@ const profile = () => {
               <span className="items-center" style={{ justifySelf: "center" }}>
                 -
               </span>
-              <span className="col-span-2 truncate">Suresh</span>
+              <span className="col-span-2 truncate">
+                {userDetails && userDetails.username}
+              </span>
               <span className="col-span-2 ms-auto">PHONE</span>
               <span style={{ justifySelf: "center" }}>-</span>
-              <span className="col-span-2 truncate">1234567890</span>
+              <span className="col-span-2 truncate">
+                {userDetails && userDetails.phoneNumber}
+              </span>
               <span className="col-span-2 ms-auto">EMAIL</span>
               <span style={{ justifySelf: "center" }}>-</span>
               <span className="col-span-2 truncate">
-                suresh@gmail.cosuresh@gmail.co
+                {userDetails && userDetails.email}
               </span>
             </div>
           </div>

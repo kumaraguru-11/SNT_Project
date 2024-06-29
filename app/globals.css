@@ -290,6 +290,14 @@ primereact;
   gap: 5px;
 }
 
+/* clip image for login */
+/* .bg-img {
+  background-image: url("/assest/0.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+} */
+
 @media screen and (max-width: 1024px) {
   .cart-list {
     display: flex;
@@ -329,5 +337,24 @@ primereact;
   }
   .header-head {
     display: none;
+  }
+}
+
+/* login page img design */
+@media screen and (max-width: 640px) {
+  .bg-white-visible {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .bg-img {
+    background-image: url("/assest/0.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
