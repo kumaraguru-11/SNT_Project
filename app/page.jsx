@@ -174,7 +174,7 @@ const main = () => {
           <div>
             <Carousel />
           </div>
-          <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="custom-grid">
             {productList &&
               productList.map((val) => (
                 <>
