@@ -90,6 +90,7 @@ const Login_Field = ({ setShow }) => {
       }
     } catch (error) {
       // alert("Error during registration: " + error.message);
+      console.log(error)
       setLoading(false);
     } finally {
       setLoading(false);

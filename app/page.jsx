@@ -90,7 +90,7 @@ const main = () => {
   useEffect(() => {
     // get data from session storage
 
-    const storedAuthData = sessionStorage.getItem("userAuthData") || {};
+    const storedAuthData = sessionStorage.getItem("userAuthData") || false;
 
     if (storedAuthData) {
       const { authToken, userEmail } = JSON.parse(storedAuthData);

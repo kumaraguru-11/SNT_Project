@@ -6,17 +6,43 @@ import Image from "next/image";
 
 const CarouselComponent = () => {
   return (
-    <Carousel showThumbs={false} autoPlay={true} infiniteLoop={true} autoFocus={true}>
+    <Carousel
+      showThumbs={false}
+      autoPlay={true}
+      infiniteLoop={true}
+      autoFocus={true}
+    >
       <div>
-        <Image src="/dates.jpg" alt="dates" className="icon" width={1400} height={400} priority/>
+        <Image
+          src="/assest/0.jpg"
+          alt="dates"
+          className="icon"
+          width={1400}
+          height={400}
+          priority
+        />
         <p className="legend">Slide 1</p>
       </div>
       <div>
-        <Image src="/download.jpeg" alt="dates" className="icon" width={1400} height={400} priority/>
+        <Image
+          src="/assest/11.jpg"
+          alt="dates"
+          className="icon"
+          width={1400}
+          height={400}
+          priority
+        />
         <p className="legend">Slide 2</p>
       </div>
       <div>
-        <Image src="/dates.jpg" alt="dates" className="icon" width={1400} height={400} priority/>
+        <Image
+          src="/assest/2.jpg"
+          alt="dates"
+          className="icon"
+          width={1400}
+          height={400}
+          priority
+        />
         <p className="legend">Slide 3</p>
       </div>
     </Carousel>
