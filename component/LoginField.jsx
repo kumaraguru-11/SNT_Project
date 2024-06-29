@@ -61,6 +61,14 @@ const Login_Field = ({ setShow }) => {
       setLoading(true);
       const response = await loginUser(values);
       if (response.status === 201 || response.status === 200) {
+        //store Authrozation and Email in session storage.
+        sessionStorage.setItem(
+          "userAuthData",
+          JSON.stringify({
+            authToken: response.data.Authorization,
+            userEmail: values.email,
+          })
+        );
         setAuth(response.data);
         setUserEmail(values.email);
         // Clear all fields after successful registration
@@ -136,7 +144,7 @@ const Login_Field = ({ setShow }) => {
   return (
     <div
       style={{ opacity: loading ? ".4" : "1" }}
-      className="w-full h-full p-2 flex flex-col justify-center bg-white-visible"
+      className="w-full h-full p-2 flex flex-col justify-center"
     >
       <h2 className="text-2xl font-bold text-orange-500 mb-2">Welcome!</h2>
       <p className="mb-2">

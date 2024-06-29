@@ -22,10 +22,8 @@ const main = () => {
 
   const [userDetails, setUserDetails] = useRecoilState(userInfo);
   const [cart, setCart] = useRecoilState(cartParams);
-  const auth = useRecoilValue(authKey);
-  const useremail = useRecoilValue(email);
-
-  console.log(auth, "<--auth", useremail, "<--email");
+  // const auth = useRecoilValue(authKey);
+  // const useremail = useRecoilValue(email);
 
   const [productList, setProductList] = useState([]);
 
@@ -90,14 +88,17 @@ const main = () => {
 
   //fetch User Details
   useEffect(() => {
-    // Check if both email and auth have values
-    if (useremail.length > 0 && auth) {
-      const payload = {
-        email: useremail,
-        auth: auth.Authorization,
-      };
+    // get data from session storage
 
-      console.log(payload, "<--getuserbyemail");
+    const storedAuthData = sessionStorage.getItem("userAuthData") || {};
+
+    if (storedAuthData) {
+      const { authToken, userEmail } = JSON.parse(storedAuthData);
+
+      const payload = {
+        email: userEmail,
+        auth: authToken,
+      };
 
       const fetchData = async () => {
         try {
@@ -111,7 +112,7 @@ const main = () => {
 
       fetchData();
     }
-  }, [auth, useremail]);
+  }, []);
 
   //fetch products
   useEffect(() => {
