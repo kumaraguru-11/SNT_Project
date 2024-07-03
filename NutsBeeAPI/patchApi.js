@@ -32,7 +32,7 @@ export const patchAddress = async (payload) => {
         },
       }
     );
-    return res.data;
+    return res;
   } catch (error) {
     console.error(error);
   }

@@ -46,6 +46,14 @@ const Profile = () => {
   const handleModifyAddress = (fun, item) => {
     //item paramaeter receives from display address dialog box("Edit icon")
     if (fun === "Add") {
+      setAddress({
+        flatNo: "",
+        street: "",
+        area: "",
+        city: "",
+        pincode: "",
+        state: "TN",
+      });
       setVisible(true);
       setAction("Add");
     }
@@ -369,7 +377,13 @@ const Profile = () => {
         <div className="flex justify-end gap-3 mt-2">
           <button
             className="p-2 rounded bg-orange-500 text-white"
-            onClick={action === "Add" ? () => handleAddAddress() : () => {handleEditAddress()}}
+            onClick={
+              action === "Add"
+                ? () => handleAddAddress()
+                : () => {
+                    handleEditAddress();
+                  }
+            }
           >
             Save
           </button>
