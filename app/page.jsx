@@ -172,7 +172,6 @@ const main = () => {
           <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {productList &&
               productList.map((val) => (
-                <>
                   <div
                     className="card border rounded-lg shadow-lg overflow-hidden"
                     key={val.id}
@@ -201,7 +200,6 @@ const main = () => {
                       </button>
                     </div>
                   </div>
-                </>
               ))}
           </div>
         </>

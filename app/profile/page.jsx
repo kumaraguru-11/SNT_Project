@@ -1,103 +1,136 @@
-// "use client";
-// import React, { useState } from "react";
-// import "primeicons/primeicons.css";
-// import { Avatar } from "primereact/avatar";
-// import { userInfo } from "../../recoilstore/store";
-// import { useRecoilValue } from "recoil";
-
-// const profile = () => {
-//   const userDetails = useRecoilValue(userInfo);
-
-//   return (
-//     <div
-//       className="w-100% px-0 sm:px-10"
-//       style={{
-//         backgroundColor: "yellow",
-//         height: "100%",
-//         minHeight: "calc(100vh - 6.5rem)",
-//       }}
-//     >
-//       <h2 className="text-4xl font-bold mb-5">My Profile</h2>
-
-//       <main
-//         className="rounded p-0 grid gap-5 grid-cols-1 sm:grid-cols-3"
-//         style={{ backgroundColor: "#f6dbc3" }}
-//       >
-//         <section>
-//           <div className="bg-white h-100% w-100% rounded p-5">
-//             <div className="flex justify-center">
-//               <span className="relative">
-//                 <Avatar label="P" size="xlarge" shape="circle" />
-//                 <i
-//                   className="pi pi-pencil absolute p-3 rounded-full hover:cursor-pointer text-white right-0 top-4"
-//                   style={{ backgroundColor: "#f97316" }}
-//                 ></i>
-//               </span>
-//             </div>
-
-//             <div className="p-5 mt-5 leading-10">
-//               <div className="flex justify-start gap-5">
-//                 <span>NAME</span>
-//                 <span>-</span>
-//                 <span className="justify-start">Suresh</span>
-//               </div>
-
-//               <div className="flex justify-start gap-5">
-//                 <span>PHONE</span>
-//                 <span>-</span>
-//                 <span className="justify-start">1234567890</span>
-//               </div>
-//               <div className="flex justify-start gap-5">
-//                 <span>EMAIL</span>
-//                 <span>-</span>
-//                 <span>suresh@gmail.com</span>
-//               </div>
-//             </div>
-//           </div>
-//         </section>
-
-//         <section className="col-span-2 flex flex-col px-0 mt-0 sm:mt-0">
-//           <div style={{ backgroundColor: "white" }} className="rounded p-5">
-//             <h2 className="text-xl">Previous Order</h2>
-//             <div
-//               className="overflow-y-scroll mt-3 h-32"
-//               style={{ backgroundColor: "lightgoldenrodyellow" }}
-//             >
-//               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-//               Repudiandae, corrupti harum placeat delectus accusamus repellendus
-//               minus cum suscipit repellat provident ex blanditiis excepturi
-//               nesciunt quo possimus dolorem soluta sapiente fugit! Lorem, ipsum
-//               dolor sit amet consectetur adipisicing elit. Repudiandae, corrupti
-//               harum placeat delectus accusamus repellendus minus cum suscipit
-//               repellat provident ex blanditiis excepturi nesciunt quo possimus
-//               dolorem soluta sapiente fugit!
-//             </div>
-//           </div>
-//           <div style={{ backgroundColor: "white" }}>sec 2 dev 2</div>
-//         </section>
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default profile;
-
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import "primeicons/primeicons.css";
 import { Avatar } from "primereact/avatar";
-import { userInfo } from "../../recoilstore/store";
-import { useRecoilValue } from "recoil";
+import { userInfo, authKey, toastState } from "../../recoilstore/store";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { Dialog } from "primereact/dialog";
+import "primeicons/primeicons.css";
+import { deleteAddress } from "@/NutsBeeAPI/deleteApi";
+import { addAddress } from "@/NutsBeeAPI/postApi";
 
-const profile = () => {
-  const userDetails = useRecoilValue(userInfo);
-  // const addresses = userDetails.addresses;
+const Profile = () => {
+  const [visible, setVisible] = useState(false);
+  const [addressList, setAddressList] = useState(false);
+  const [action, setAction] = useState();
+
+  const auth = useRecoilValue(authKey);
+  // const userDetails = useRecoilValue(userInfo);
+  const [userDetails, setUserDetails] = useRecoilState(userInfo);
   const username = userDetails.username || "";
   const first = username.slice(0, 1).toUpperCase();
+
+  const [address, setAddress] = useState({
+    flatNo: "",
+    street: "",
+    area: "",
+    city: "",
+    pincode: "",
+    state: "TN",
+  });
+
+  //prime react toast
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 3000,
+    });
+  };
+
+  //Dialog Box shown method
+  const handleModifyAddress = (fun) => {
+    if (fun === "Add") {
+      setVisible(true);
+      setAction("Add");
+    }
+    if (fun === "Edit") {
+      setVisible(true);
+      setAddressList(false);
+      setAction("Edit");
+    }
+
+    if (fun === "View") {
+      setAddressList(true);
+    }
+  };
+
+  //Delete Api Function
+  const handleDeleteAddress = async (el) => {
+    const updatedAddresses = userDetails?.addresses.filter((val) => {
+      return val.id !== el.id;
+    });
+
+    const payload = {
+      id: el.id,
+      auth: auth.Authorization,
+    };
+    try {
+      const res = await deleteAddress(payload);
+      showToast(res);
+      setUserDetails((prevDetails) => ({
+        ...prevDetails,
+        addresses: updatedAddresses,
+      }));
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
+
+  //Add Api function
+  const handleAddAddress = async () => {
+    const payload = {
+      auth: auth.Authorization,
+      userId: userDetails.id,
+      address: { ...address },
+    };
+    try {
+      const res = await addAddress(payload);
+      console.log(res);
+      if (res.status === 201 || res.status === 200) {
+        showToast("Address Created Successfully!!!");
+
+        setUserDetails((prevDetails) => ({
+          ...prevDetails,
+          addresses: [...prevDetails.addresses, res.data], // Assuming res.data.address contains the new address
+        }));
+
+        console.log(userDetails);
+        setAddress({
+          flatNo: "",
+          street: "",
+          area: "",
+          city: "",
+          pincode: "",
+          state: "TN",
+        });
+        setVisible(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  //input field value
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAddress((prevAddress) => ({
+      ...prevAddress,
+      [name]: value,
+    }));
+  };
+
+  // Ensure that certain parts are only rendered on the client side
+  if (typeof window === "undefined") {
+    return null; // or some server-rendered placeholder
+  }
+
   return (
     <div
       style={{
-        // backgroundColor: "yellow",
         height: "100%",
         minHeight: "calc(100vh - 6.5rem)",
         padding: "5px",
@@ -109,10 +142,10 @@ const profile = () => {
         style={{ backgroundColor: "#f6dbc3" }}
       >
         <section className="card p-5">
-          <div className="bg-white h-full min-w-96 rounded p-5">
+          <div className="bg-white h-full min-w-64 rounded p-5 change-profile-card">
             <div className="flex justify-center">
               <span className="relative mt-10">
-                <Avatar label={`${first}`} size="xlarge" shape="circle" />
+                <Avatar label={first} size="xlarge" shape="circle" />
                 <i
                   className="pi pi-pencil absolute p-3 rounded-full hover:cursor-pointer text-white right-0 top-4"
                   style={{ backgroundColor: "#f97316" }}
@@ -125,18 +158,16 @@ const profile = () => {
                 -
               </span>
               <span className="col-span-2 truncate">
-                {userDetails && userDetails.username}
+                {userDetails?.username}
               </span>
               <span className="col-span-2 ms-auto">PHONE</span>
               <span style={{ justifySelf: "center" }}>-</span>
               <span className="col-span-2 truncate">
-                {userDetails && userDetails.phoneNumber}
+                {userDetails?.phoneNumber}
               </span>
               <span className="col-span-2 ms-auto">EMAIL</span>
               <span style={{ justifySelf: "center" }}>-</span>
-              <span className="col-span-2 truncate">
-                {userDetails && userDetails.email}
-              </span>
+              <span className="col-span-2 truncate">{userDetails?.email}</span>
             </div>
           </div>
         </section>
@@ -159,18 +190,33 @@ const profile = () => {
               </div>
             </div>
           </article>
-          <article className="black2 bg-lightsalmon flex-1 p-2">
+          <article className="relative bg-lightsalmon flex-1 p-2">
             <div style={{ backgroundColor: "white" }} className="rounded p-5">
-              <h2 className="text-xl">Shipping Address</h2>
+              <h2 className="text-xl truncate">Shipping Address</h2>
+              <i
+                className="pi pi-plus p-2 rounded-full hover:cursor-pointer text-white absolute right-16 top-6"
+                style={{ backgroundColor: "#f97316" }}
+                onClick={() => handleModifyAddress("Add")}
+              ></i>
+              {userDetails?.addresses?.length > 0 && (
+                <i
+                  className="pi pi-ellipsis-v p-2 rounded-full hover:cursor-pointer text-white absolute right-5 top-6"
+                  style={{ backgroundColor: "#f97316" }}
+                  onClick={() => handleModifyAddress("View")}
+                ></i>
+              )}
               <section className="leading-8">
                 <div className="grid grid-cols-2 mt-3">
                   <span className="text-sm text-slate-400 ">Address</span>
-                  <span className="truncate">jhhjk</span>
-                  {/* {`${addresses[0].flatNo},${addresses[0].street},${addresses[0].area}`} */}
+                  <span className="truncate">
+                    {userDetails?.addresses?.[0].flatNo ?? ""}
+                    {userDetails?.addresses?.[0].street ?? ""}
+                    {userDetails?.addresses?.[0].area ?? ""}
+                  </span>
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">City</span>
-                  <span>nm,</span>
+                  <span>{userDetails?.addresses?.[0].city}</span>
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">Country</span>
@@ -178,15 +224,143 @@ const profile = () => {
                 </div>
                 <div className="grid grid-cols-2">
                   <span className="text-sm text-slate-400">Zip code</span>
-                  <span>jj</span>
+                  <span>{userDetails?.addresses?.[0].pincode}</span>
                 </div>
               </section>
             </div>
           </article>
         </section>
       </main>
+
+      {/* view address Dialog Box */}
+      {addressList && (
+        <Dialog
+          header={`User Address`}
+          visible={addressList}
+          style={{
+            maxWidth: "40rem",
+            width: "90%",
+            maxHeight: "80vh",
+            overflowY: "scroll",
+          }}
+          onHide={() => {
+            if (!addressList) return;
+            setAddressList(false);
+          }}
+        >
+          {userDetails?.addresses?.map((el) => (
+            <div style={{ overflow: "scroll", padding: "10px" }}>
+              <div
+                key={el.id}
+                className="w-10/12 p-5 rounded border-2 shadow-2xl mt-4"
+              >
+                <div className="flex justify-end gap-5 mb-4">
+                  <i
+                    className="pi pi-trash cursor-pointer hover:text-red"
+                    onClick={() => handleDeleteAddress(el)}
+                  ></i>
+                  <i
+                    className="pi pi-pencil cursor-pointer hover:text-green"
+                    onClick={() => handleModifyAddress("Edit")}
+                  ></i>
+                </div>
+                <p>{`FlatNo:${el.flatNo},${el.street},${el.area}`}</p>
+                <p>{`${el.city}-${el.pincode}`}</p>
+              </div>
+            </div>
+          ))}
+        </Dialog>
+      )}
+
+      {/* address Edit/Add dialog box */}
+      <Dialog
+        header={`${action} Address`}
+        visible={visible}
+        style={{ maxWidth: "40rem", width: "90%" }}
+        onHide={() => {
+          if (!visible) return;
+          setVisible(false);
+        }}
+      >
+        <div className="float-label mt-5">
+          <input
+            type="text"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="flatNo"
+            placeholder=""
+            value={address.flatNo}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+          <label className="float-label-text">flatNo</label>
+        </div>
+        <div className="float-label mt-5">
+          <input
+            type="text"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="street"
+            placeholder=""
+            value={address.street}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+          <label className="float-label-text">Street</label>
+        </div>
+        <div className="float-label mt-5">
+          <input
+            type="text"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="area"
+            placeholder=""
+            value={address.area}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+          <label className="float-label-text">Area</label>
+        </div>
+        <div className="float-label mt-5">
+          <input
+            type="text"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="city"
+            placeholder=""
+            value={address.city}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+          <label className="float-label-text">City</label>
+        </div>
+        <div className="float-label mt-5">
+          <input
+            type="text"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="pincode"
+            placeholder=""
+            value={address.pincode}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+          />
+          <label className="float-label-text">Pincode</label>
+        </div>
+        <div className="flex justify-end gap-3 mt-2">
+          <button
+            className="p-2 rounded bg-orange-500 text-white"
+            onClick={() => handleAddAddress()}
+          >
+            Save
+          </button>
+          <button className="p-2 rounded bg-orange-500 text-white">
+            Discard
+          </button>
+        </div>
+      </Dialog>
     </div>
   );
 };
 
-export default profile;
+export default Profile;

@@ -15,3 +15,17 @@ export const deleteCart = async (payload) => {
     console.error(error);
   }
 };
+
+export const deleteAddress = async (payload) => {
+  try {
+    const res = await axios.delete(`${host}/nutsBee/address/${payload.id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: payload.auth,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
