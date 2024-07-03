@@ -19,3 +19,21 @@ export const patchCart = async (payload) => {
     console.error(error);
   }
 };
+
+export const patchAddress = async (payload) => {
+  try {
+    const res = await axios.patch(
+      `${host}/nutsBee/address/${payload.Id}`,
+      payload.changeAddress,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: payload.auth,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

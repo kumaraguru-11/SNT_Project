@@ -24,7 +24,7 @@ export const deleteAddress = async (payload) => {
         Authorization: payload.auth,
       },
     });
-    return res.data;
+    return res;
   } catch (error) {
     console.error(error);
   }

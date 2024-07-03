@@ -8,6 +8,7 @@ import { Dialog } from "primereact/dialog";
 import "primeicons/primeicons.css";
 import { deleteAddress } from "@/NutsBeeAPI/deleteApi";
 import { addAddress } from "@/NutsBeeAPI/postApi";
+import { patchAddress } from "@/NutsBeeAPI/patchApi";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
@@ -42,7 +43,8 @@ const Profile = () => {
   };
 
   //Dialog Box shown method
-  const handleModifyAddress = (fun) => {
+  const handleModifyAddress = (fun, item) => {
+    //item paramaeter receives from display address dialog box("Edit icon")
     if (fun === "Add") {
       setVisible(true);
       setAction("Add");
@@ -51,6 +53,14 @@ const Profile = () => {
       setVisible(true);
       setAddressList(false);
       setAction("Edit");
+      setAddress({
+        flatNo: item.flatNo,
+        street: item.street,
+        area: item.area,
+        city: item.city,
+        pincode: item.pincode,
+        state: "TN",
+      });
     }
 
     if (fun === "View") {
@@ -70,11 +80,13 @@ const Profile = () => {
     };
     try {
       const res = await deleteAddress(payload);
-      showToast(res);
-      setUserDetails((prevDetails) => ({
-        ...prevDetails,
-        addresses: updatedAddresses,
-      }));
+      if (res.status === 201 || res.status === 200) {
+        showToast(res.data);
+        setUserDetails((prevDetails) => ({
+          ...prevDetails,
+          addresses: updatedAddresses,
+        }));
+      }
     } catch (e) {
       console.error(e.message);
     }
@@ -82,35 +94,37 @@ const Profile = () => {
 
   //Add Api function
   const handleAddAddress = async () => {
-    const payload = {
-      auth: auth.Authorization,
-      userId: userDetails.id,
-      address: { ...address },
-    };
-    try {
-      const res = await addAddress(payload);
-      console.log(res);
-      if (res.status === 201 || res.status === 200) {
-        showToast("Address Created Successfully!!!");
+    const { flatNo, street, area, city, pincode } = address;
+    if (flatNo && street && area && city && pincode) {
+      const payload = {
+        auth: auth.Authorization,
+        userId: userDetails.id,
+        address: { ...address },
+      };
+      try {
+        const res = await addAddress(payload);
+        if (res.status === 201 || res.status === 200) {
+          showToast("Address Created Successfully!!!");
 
-        setUserDetails((prevDetails) => ({
-          ...prevDetails,
-          addresses: [...prevDetails.addresses, res.data], // Assuming res.data.address contains the new address
-        }));
+          setUserDetails((prevDetails) => ({
+            ...prevDetails,
+            addresses: [...prevDetails.addresses, res.data], // Assuming res.data.address contains the new address
+          }));
 
-        console.log(userDetails);
-        setAddress({
-          flatNo: "",
-          street: "",
-          area: "",
-          city: "",
-          pincode: "",
-          state: "TN",
-        });
-        setVisible(false);
+          console.log(userDetails);
+          setAddress({
+            flatNo: "",
+            street: "",
+            area: "",
+            city: "",
+            pincode: "",
+            state: "TN",
+          });
+          setVisible(false);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -206,25 +220,33 @@ const Profile = () => {
                 ></i>
               )}
               <section className="leading-8">
-                <div className="grid grid-cols-2 mt-3">
+                <div className="grid grid-cols-2 mt-3 items-center">
                   <span className="text-sm text-slate-400 ">Address</span>
                   <span className="truncate">
-                    {userDetails?.addresses?.[0].flatNo ?? ""}
-                    {userDetails?.addresses?.[0].street ?? ""}
-                    {userDetails?.addresses?.[0].area ?? ""}
+                    {userDetails.addresses.length > 0
+                      ? `${userDetails?.addresses?.[0].flatNo},${userDetails?.addresses?.[0].street},${userDetails?.addresses?.[0].area}`
+                      : "-"}
                   </span>
                 </div>
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 mt-1 items-center">
                   <span className="text-sm text-slate-400">City</span>
-                  <span>{userDetails?.addresses?.[0].city}</span>
+                  <span>
+                    {userDetails.addresses.length > 0
+                      ? `${userDetails?.addresses?.[0].city}`
+                      : "-"}
+                  </span>
                 </div>
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 mt-1 items-center">
                   <span className="text-sm text-slate-400">Country</span>
-                  <span>india</span>
+                  <span>India</span>
                 </div>
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 mt-1 items-center">
                   <span className="text-sm text-slate-400">Zip code</span>
-                  <span>{userDetails?.addresses?.[0].pincode}</span>
+                  <span>
+                    {userDetails.addresses.length > 0
+                      ? `${userDetails?.addresses?.[0].pincode}`
+                      : "-"}
+                  </span>
                 </div>
               </section>
             </div>
@@ -250,10 +272,7 @@ const Profile = () => {
         >
           {userDetails?.addresses?.map((el) => (
             <div style={{ overflow: "scroll", padding: "10px" }}>
-              <div
-                key={el.id}
-                className="w-10/12 p-5 rounded border-2 shadow-2xl mt-4"
-              >
+              <div key={el.id} className="w-10/12 p-5 glassmorphism mt-4">
                 <div className="flex justify-end gap-5 mb-4">
                   <i
                     className="pi pi-trash cursor-pointer hover:text-red"
@@ -261,7 +280,7 @@ const Profile = () => {
                   ></i>
                   <i
                     className="pi pi-pencil cursor-pointer hover:text-green"
-                    onClick={() => handleModifyAddress("Edit")}
+                    onClick={() => handleModifyAddress("Edit", el)}
                   ></i>
                 </div>
                 <p>{`FlatNo:${el.flatNo},${el.street},${el.area}`}</p>
@@ -350,11 +369,23 @@ const Profile = () => {
         <div className="flex justify-end gap-3 mt-2">
           <button
             className="p-2 rounded bg-orange-500 text-white"
-            onClick={() => handleAddAddress()}
+            onClick={action === "Add" ? () => handleAddAddress() : () => {handleEditAddress()}}
           >
             Save
           </button>
-          <button className="p-2 rounded bg-orange-500 text-white">
+          <button
+            className="p-2 rounded bg-orange-500 text-white"
+            onClick={() =>
+              setAddress({
+                flatNo: "",
+                street: "",
+                area: "",
+                city: "",
+                pincode: "",
+                state: "TN",
+              })
+            }
+          >
             Discard
           </button>
         </div>
