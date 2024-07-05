@@ -281,7 +281,7 @@ const SignUp = () => {
           <div>
             <button
               onClick={(e) => handleSubmit(e)}
-              className="mt-4 px-4 py-2 w-full rounded border-2 mb-3 border-orange-500 text-orange hover:bg-white hover:text-white hover:bg-orange-500"
+              className="mt-4 px-4 py-2 w-full rounded border-2 mb-3 border-orange-500 text-orange hover:bg-orange-500 hover:text-white hover:bg-orange-500"
               disabled={isButtonDisabled()}
               style={{ cursor: isButtonDisabled() ? "not-allowed" : "pointer" }}
             >

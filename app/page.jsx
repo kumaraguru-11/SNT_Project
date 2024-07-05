@@ -244,6 +244,7 @@ const main = () => {
           visible={visible}
           setVisible={setVisible}
           product={product}
+          addingCart={addingCart}
         />
       )}
       {/* login dialog box */}

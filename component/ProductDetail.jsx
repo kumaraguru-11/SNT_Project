@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import Image from "next/image";
 
-const ProductDetail = ({ visible, setVisible, product }) => {
+const ProductDetail = ({ visible, setVisible, product,addingCart }) => {
   return (
     <div className="card flex justify-content-center">
       <button
@@ -52,7 +52,7 @@ const ProductDetail = ({ visible, setVisible, product }) => {
             </div>
 
             <div className="flex flex-col mt-5">
-              <button className="text-xl font-semibold bg-orange-500 p-3 text-white cursor-pointer">
+              <button className="text-xl font-semibold bg-orange-500 p-3 text-white cursor-pointer" onClick={()=>addingCart(product.id)}>
                 Add to Cart
               </button>
               <button
