@@ -25,6 +25,10 @@
 // })
 
 "use client";
+// import { atom } from 'recoil';
+
+
+//presistent state
 const loadState = (key) => {
   try {
     const serializedState = localStorage.getItem(key);
@@ -70,13 +74,22 @@ export const authKey = createPersistentAtom("authKey", "");
 export const email = createPersistentAtom("email", "");
 export const userInfo = createPersistentAtom("userInfo", []);
 export const cartParams = createPersistentAtom("cartParams", []);
+// export const userAddress=createPersistentAtom("userAddress",[]);
 
 export default function RecoilContextProvider({ children }) {
   return <RecoilRoot>{children}</RecoilRoot>;
 }
 
+<<<<<<< HEAD
 //normal store for Toast
 export const toastState = atom({
   key: "toastState",
   default: null,
+=======
+
+//normal state  
+export const toastState = atom({
+    key: 'toastState',
+    default: null,
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 });

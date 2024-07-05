@@ -17,4 +17,8 @@ export default function GlobalToast() {
     }, [toastMessage, setToastMessage]);
 
     return <Toast ref={toast} />;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af

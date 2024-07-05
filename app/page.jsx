@@ -206,6 +206,7 @@ const main = () => {
           <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {productList &&
               productList.map((val) => (
+<<<<<<< HEAD
                 <div
                   className="card border rounded-lg shadow-lg overflow-hidden"
                   key={val.id}
@@ -234,6 +235,36 @@ const main = () => {
                     </button>
                   </div>
                 </div>
+=======
+                  <div
+                    className="card border rounded-lg shadow-lg overflow-hidden"
+                    key={val.id}
+                    onClick={() => handleProductDetail(val)}
+                  >
+                    <Image
+                      className="product-img"
+                      src={`/assest/${val.id}.jpg`}
+                      alt="Product Image 1"
+                      width={300}
+                      height={120}
+                      priority
+                    />
+                    <div className="p-5 text-center">
+                      <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
+                        {val.productName}
+                      </h2>
+                      <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
+                      <button
+                        className="bg-orange-500 text-white py-2 px-4 rounded"
+                        onClick={(e) => {
+                          handleDialog(e, val);
+                        }}
+                      >
+                        Add To Cart
+                      </button>
+                    </div>
+                  </div>
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
               ))}
           </div>
         </>

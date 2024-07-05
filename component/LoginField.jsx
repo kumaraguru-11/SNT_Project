@@ -6,8 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/NutsBeeAPI/postApi";
 import { useRecoilState } from "recoil";
+<<<<<<< HEAD
 import { authKey, email, toastState } from "../recoilstore/store";
+=======
+import { authKey, email,toastState } from "../recoilstore/store";
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 import Loader from "../component/Loader";
+
 
 const Login_Field = ({ setShow }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +38,7 @@ const Login_Field = ({ setShow }) => {
     },
   ]);
 
+<<<<<<< HEAD
   //prime react toast
   const [, setToastMessage] = useRecoilState(toastState);
 
@@ -52,6 +58,14 @@ const Login_Field = ({ setShow }) => {
       life: 2000,
     });
   };
+=======
+  //prime react toast 
+  const [, setToastMessage] = useRecoilState(toastState);
+
+    const showToast = (message) => {
+        setToastMessage({ severity: 'error', summary: 'Error', detail:`${message}`, life: 2000 });
+    };
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 
   //store Auth Key globally(Recoil)
   const [auth, setAuth] = useRecoilState(authKey);
@@ -88,8 +102,13 @@ const Login_Field = ({ setShow }) => {
         setFields((prevFields) =>
           prevFields.map((field) => ({
             ...field,
+<<<<<<< HEAD
             value: "",
             hasError: false,
+=======
+            value: "", 
+            hasError: false, 
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
             error: "",
           }))
         );
@@ -98,12 +117,20 @@ const Login_Field = ({ setShow }) => {
         route.push("/");
         setShow(false);
       } else {
+<<<<<<< HEAD
         showToast("Invalid Password");
+=======
+       showToast('Invalid Password')
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
       }
     } catch (error) {
       // alert("Error during registration: " + error.message);
       setLoading(false);
+<<<<<<< HEAD
       console.error(error.message);
+=======
+      console.error(error.message)
+>>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
     } finally {
       setLoading(false);
     }

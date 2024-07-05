@@ -296,6 +296,21 @@ primereact;
   gap: 5px;
 }
 
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@media (min-width: 600px) and (max-width: 830px) {
+  .change-profile-card {
+    display: flex;
+  }
+}
+
 /* clip image for login */
 .form-bg {
   background-image: url("/assest/0.jpg");
@@ -365,6 +380,7 @@ primereact;
   }
 }
 
+/* landing page sample*/
 .custom-grid {
   display: grid;
   margin-top: 2.5rem; /* Equivalent to mt-10 */
