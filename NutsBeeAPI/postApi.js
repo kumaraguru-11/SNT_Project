@@ -53,11 +53,7 @@ export const AddtoCart = async (payload) => {
         },
       }
     );
-<<<<<<< HEAD
     return res;
-=======
-    return res.data;
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
   } catch (error) {
     return error.message;
   }
@@ -80,8 +76,4 @@ export const addAddress = async (payload) => {
   } catch(error) {
     return error.message;
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af

@@ -177,11 +177,7 @@
 // export default Header;
 
 "use client";
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from "react";
-=======
-import React, { useState, useEffect } from "react";
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 import "primeicons/primeicons.css";
 import { Menu } from "primereact/menu";
 import { Toast } from "primereact/toast";

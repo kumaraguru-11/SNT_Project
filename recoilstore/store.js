@@ -80,16 +80,8 @@ export default function RecoilContextProvider({ children }) {
   return <RecoilRoot>{children}</RecoilRoot>;
 }
 
-<<<<<<< HEAD
 //normal store for Toast
 export const toastState = atom({
   key: "toastState",
   default: null,
-=======
-
-//normal state  
-export const toastState = atom({
-    key: 'toastState',
-    default: null,
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 });
