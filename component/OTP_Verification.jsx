@@ -3,8 +3,9 @@ import React, { useState, useEffect,useRef } from "react";
 import { InputOtp } from "primereact/inputotp";
 import axios from "axios";
 import Loader from '../component/Loader'
-import { Toast } from 'primereact/toast';
 import {getOtp,reSentOtp} from '@/NutsBeeAPI/getApi';
+import { toastState } from "@/recoilstore/store";
+import { useRecoilState } from "recoil";
 
 const OTP_Verification = ({ setVerify, reset, setReset }) => {
   const [token, setTokens] = useState("");
@@ -12,11 +13,18 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
   const [getOTP, setGetOTP] = useState("");
   const [isOtpValid, setIsOtpValid] = useState(true);
   const [loading, setLoading] = useState(false); // Loader state
-  const toast = useRef(null);
-  //*toast message
-  const showError = () => {
-    toast.current.show({severity:'error', summary: 'Error', detail:'Invalid OTP', life: 3000});
-}
+
+  const [, setToastMessage] = useRecoilState(toastState);
+
+    const showToast = (message) => {
+      setToastMessage({
+        severity: "success",
+        summary: "Success",
+        detail: `${message}`,
+        life: 2000,
+      });
+    };
+ 
   //* Re-send OTP
   const fetch = async () => {
     setLoading(true); // Show loader
@@ -30,6 +38,7 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
       //   }
       // );
       const res=await reSentOtp(reset)
+      showToast(res)
       gettingOTP();
       setTimeRemaining(90); // reset to 1 minute 30 seconds
     } catch (error) {
@@ -42,17 +51,9 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
   //* Get OTP
   const gettingOTP = async () => {
     setLoading(true); // Show loader
-    try {
-      // const res = await axios.get(
-      //   `https://nutsbee-1.onrender.com/nutsBee/users?email=${reset.email}`,
-      //   {
-      //     headers: {
-      //       Authorization: reset.auth,
-      //     },
-      //   }
-      // );
-      
+    try {      
       const res=await getOtp(reset)
+      console.log(res,"<---")
       setGetOTP(res.otp);
       setReset({ ...reset, otp: res.otp });
       setIsOtpValid(true); // Reset OTP validity
@@ -66,6 +67,8 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
   useEffect(() => {
     gettingOTP();
   }, [reset.email, reset.auth]);
+
+  console.log(getOTP,"<---getOTP")
 
   //* OTP validation for changing password
   const handleOTP = (e) => {
@@ -109,7 +112,6 @@ const OTP_Verification = ({ setVerify, reset, setReset }) => {
 
   return (
     <div className="otp">
-             <Toast ref={toast} />
       <div className="otp-field center capsule"  style={{opacity:loading ? '.4':"1"}}>
           <h2 className="text-xl font-medium text-orange-500">Verify OTP</h2>
             <InputOtp

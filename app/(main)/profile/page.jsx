@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "primeicons/primeicons.css";
 import { Avatar } from "primereact/avatar";
-import { userInfo, authKey, toastState } from "../../recoilstore/store";
+import { userInfo, authKey, toastState } from "@/recoilstore/store";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { Dialog } from "primereact/dialog";
 import "primeicons/primeicons.css";

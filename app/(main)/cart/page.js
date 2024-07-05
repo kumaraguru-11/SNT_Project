@@ -5,8 +5,8 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Image from "next/image";
 import { getCartItems } from "@/NutsBeeAPI/getApi";
-import { patchCart } from "../../NutsBeeAPI/patchApi";
-import { deleteCart } from "../../NutsBeeAPI/deleteApi";
+import {patchCart} from '../../../NutsBeeAPI/patchApi'
+import { deleteCart } from "../../../NutsBeeAPI/deleteApi";
 import { userInfo, authKey, cartParams, toastState } from "@/recoilstore/store";
 import { useRecoilValue, useRecoilState } from "recoil";
 

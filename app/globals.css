@@ -182,7 +182,7 @@ primereact;
   transform: scale(1.1);
 }
 
-.cart-page .p-component{
+.cart-page .p-component {
   height: 28rem;
   overflow-y: scroll;
   padding: 5px;

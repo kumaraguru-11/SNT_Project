@@ -1,10 +1,10 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import { validateFields } from "./validation";
-import Loader from '../component/Loader';
+import Loader from "../component/Loader";
 import axios from "axios";
-import { Toast } from 'primereact/toast';
 import { emailOTP } from "@/NutsBeeAPI/postApi";
-
+import { toastState } from "@/recoilstore/store";
+import { useRecoilState } from "recoil";
 
 const GetEmail = ({ setVerify, setReset, reset }) => {
   const [email, setEmail] = useState({
@@ -15,20 +15,38 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
 
   const [isLoad, setIsLoad] = useState(false);
 
-  const toast = useRef(null);
-  //toast message
-  const showError = () => {
-    toast.current.show({severity:'error', summary: 'Error', detail:'Invalid Email', life: 3000});
-}
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
+  const errorToast = (message) => {
+    setToastMessage({
+      severity: "error",
+      summary: "Error",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
 
   // Sent OTP to the user Email
   const sentOTP = async () => {
     setIsLoad(true);
     const sendEmail = { email: email.value.toLowerCase() };
     try {
-      const res=await emailOTP(sendEmail)
-      setReset({ ...reset, auth: res.Authorization, email: email.value });
-      setVerify('otp'); // For Conditional Re-rendering
+      const res = await emailOTP(sendEmail);
+      if (res.status === 200 || res.status === 201) {
+        setReset({ ...reset, auth: res.data.Authorization, email: email.value });
+        setVerify("otp"); // For Conditional Re-rendering
+        showToast("OTP sended");
+      } else {
+        errorToast("something went wrong please try again");
+      }
     } catch (error) {
       // console.error("Error fetching data:", error);
       showError();
@@ -36,9 +54,9 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
         value: "",
         hasError: false,
         error: "",
-      })
+      });
     } finally {
-      setIsLoad(false); // For Loading 
+      setIsLoad(false); // For Loading
     }
   };
 
@@ -53,11 +71,12 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
     setEmail(updatedemail);
   };
 
-
   return (
     <div className="otp">
-        <Toast ref={toast} />
-      <div className="center capsule flex flex-col items-center" style={{opacity:isLoad ? '.4':"1"}}>
+      <div
+        className="center capsule flex flex-col items-center"
+        style={{ opacity: isLoad ? ".4" : "1" }}
+      >
         <h2 className="text-xl font-medium text-orange-500 mt-10">
           Enter Email
         </h2>
@@ -79,14 +98,20 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
 
         <button
           className="mt-5 p-3 rounded bg-white text-orange-500 btn-hover border-2 border-orange-500"
-          style={{ width: "80%", cursor: email.hasError || email.value.length===0 || isLoad ? 'not-allowed':'pointer' }}
+          style={{
+            width: "80%",
+            cursor:
+              email.hasError || email.value.length === 0 || isLoad
+                ? "not-allowed"
+                : "pointer",
+          }}
           onClick={sentOTP}
-          disabled={email.hasError || email.value.length===0 || isLoad}
+          disabled={email.hasError || email.value.length === 0 || isLoad}
         >
           Submit
         </button>
       </div>
-        {isLoad && <Loader />}
+      {isLoad && <Loader />}
     </div>
   );
 };

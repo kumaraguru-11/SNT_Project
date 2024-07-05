@@ -36,7 +36,7 @@ export const emailOTP = async (payload) => {
         "Content-Type": "application/json",
       },
     });
-    return res.data;
+    return res;
   } catch (error) {
     return error.message;
   }

@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import "primeicons/primeicons.css";
-import LoginField from "../../component/LoginField";
+// import LoginField from "../../component/LoginField";
+import LoginField from "@/component/LoginField";
 import Image from "next/image";
 
 const LogIn = () => {
