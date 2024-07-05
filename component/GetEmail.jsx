@@ -24,19 +24,9 @@ const GetEmail = ({ setVerify, setReset, reset }) => {
   // Sent OTP to the user Email
   const sentOTP = async () => {
     setIsLoad(true);
-    const sendEmail = { email: email.value };
+    const sendEmail = { email: email.value.toLowerCase() };
     try {
-      // const res = await axios.post(
-      //   `https://nutsbee-1.onrender.com/user/forgotPassword`,
-      //   sendEmail,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
       const res=await emailOTP(sendEmail)
-      console.log(res)
       setReset({ ...reset, auth: res.Authorization, email: email.value });
       setVerify('otp'); // For Conditional Re-rendering
     } catch (error) {

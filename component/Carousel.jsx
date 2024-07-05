@@ -11,35 +11,30 @@ const CarouselComponent = () => {
       autoPlay={true}
       infiniteLoop={true}
       autoFocus={true}
+      showStatus={false}
     >
       <div>
         <Image
           src="/sample.jpg"
           alt="dates"
-          className="icon"
-          width={1400}
+          width={1200}
           height={400}
-          priority
         />
       </div>
       <div>
         <Image
           src="/assest/11.jpg"
           alt="dates"
-          className="icon"
           width={1400}
           height={400}
-          priority
         />
       </div>
       <div>
         <Image
           src="/assest/2.jpg"
           alt="dates"
-          className="icon"
           width={1400}
           height={400}
-          priority
         />
       </div>
     </Carousel>

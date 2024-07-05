@@ -7,71 +7,32 @@ import Image from "next/image";
 import { getCartItems } from "@/NutsBeeAPI/getApi";
 import { patchCart } from "../../NutsBeeAPI/patchApi";
 import { deleteCart } from "../../NutsBeeAPI/deleteApi";
-import { userInfo, authKey, cartParams } from "@/recoilstore/store";
+import { userInfo, authKey, cartParams, toastState } from "@/recoilstore/store";
 import { useRecoilValue, useRecoilState } from "recoil";
 
 const Cart = () => {
-  //!fake data
-  // const [products, setProducts] = useState([
-  //   {
-  //     id: 1,
-  //     image: "/assest/0.jpg",
-  //     price: 10,
-  //     quantity: 2,
-  //     total: 20,
-  //     category: "dryfruits",
-  //     product: "Dates",
-  //   },
-  //   {
-  //     id: 2,
-  //     image: "/assest/1.jpg",
-  //     price: 15,
-  //     quantity: 1,
-  //     total: 15,
-  //     category: "sweets",
-  //     product: "chocolate",
-  //   },
-  //   {
-  //     id: 3,
-  //     image: "/assest/0.jpg",
-  //     price: 10,
-  //     quantity: 2,
-  //     total: 20,
-  //     category: "dryfruits",
-  //     product: "Dates",
-  //   },
-  //   {
-  //     id: 4,
-  //     image: "/assest/1.jpg",
-  //     price: 15,
-  //     quantity: 1,
-  //     total: 15,
-  //     category: "sweets",
-  //     product: "chocolate",
-  //   },
-  //   {
-  //     id: 5,
-  //     image: "/assest/0.jpg",
-  //     price: 10,
-  //     quantity: 2,
-  //     total: 20,
-  //     category: "dryfruits",
-  //     product: "Dates",
-  //   },
-  //   {
-  //     id: 6,
-  //     image: "/assest/1.jpg",
-  //     price: 15,
-  //     quantity: 1,
-  //     total: 15,
-  //     category: "sweets",
-  //     product: "chocolate",
-  //   },
-  // ]);
-
   const Id = useRecoilValue(userInfo);
   const auth = useRecoilValue(authKey);
   const [cart, setCart] = useRecoilState(cartParams);
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
+
+  const errorToast = (message) => {
+    setToastMessage({
+      severity: "error",
+      summary: "Error",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
 
   const [products, setProducts] = useState([]);
 
@@ -129,16 +90,20 @@ const Cart = () => {
   };
 
   const handleDeleteCart = async (id, itemId) => {
-    const updatedProducts = products.filter((el) => el.id !== id);
-    const updatedCart = cart && cart.filter((el) => el.itemId !== itemId);
-    setProducts(updatedProducts);
-    setCart(updatedCart);
     const payload = {
       cartId: id,
       auth: auth.Authorization,
     };
-
-    await deleteCart(payload);
+    const res = await deleteCart(payload);
+    if (res.status === 200 || res.status === 201) {
+      const updatedProducts = products.filter((el) => el.id !== id);
+      const updatedCart = cart && cart.filter((el) => el.itemId !== itemId);
+      setProducts(updatedProducts);
+      setCart(updatedCart);
+      showToast(res.data);
+    } else {
+      errorToast("something went wrong...");
+    }
   };
 
   //fetch user cart list
@@ -162,16 +127,14 @@ const Cart = () => {
   }, [auth, Id]);
 
   const subtotal =
-    products.length > 0
-      ? products.reduce(
+    products?.length > 0
+      ? products?.reduce(
           (acc, product) => acc + product.price * product.quantity,
           0
         )
       : 0;
   const tax = subtotal && subtotal * (10 / 100);
 
-  // const subtotal = 100;
-  // const tax = 10;
   //!Below functions are the templates for the tabel.
   const imageBodyTemplate = (val) => {
     return (
@@ -182,7 +145,6 @@ const Cart = () => {
             alt="img"
             width={100}
             height={90}
-            priority
             className="rounded"
             style={{ overflow: "hidden" }}
           />
@@ -224,7 +186,7 @@ const Cart = () => {
   const deleteBodyTemplate = (val) => {
     return (
       <i
-        className="pi pi-times-circle cursor-pointer"
+        className="pi pi-trash cursor-pointer"
         onClick={() => handleDeleteCart(val.id, val.itemId)}
       ></i>
     );
@@ -242,7 +204,7 @@ const Cart = () => {
       {products.length > 0 && (
         <div className="gap-2 cart-list">
           {/* Tabel */}
-          <div className="card mt-10 flex-grow">
+          <div className="card mt-10 flex-grow cart-page">
             <DataTable
               value={products}
               header=""

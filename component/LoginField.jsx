@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/NutsBeeAPI/postApi";
 import { useRecoilState } from "recoil";
-import { authKey, email } from "../recoilstore/store";
+import { authKey, email, toastState } from "../recoilstore/store";
 import Loader from "../component/Loader";
 
 const Login_Field = ({ setShow }) => {
@@ -33,6 +33,26 @@ const Login_Field = ({ setShow }) => {
     },
   ]);
 
+  //prime react toast
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "error",
+      summary: "Error",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
+  const successToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
+
   //store Auth Key globally(Recoil)
   const [auth, setAuth] = useRecoilState(authKey);
   const [userEmail, setUserEmail] = useRecoilState(email);
@@ -47,7 +67,8 @@ const Login_Field = ({ setShow }) => {
     const values = validFields.reduce(
       (acc, field) => ({
         ...acc,
-        [field.name]: field.value,
+        [field.name]:
+          field.name === "email" ? field.value.toLowerCase() : field.value,
       }),
       {}
     );
@@ -67,24 +88,22 @@ const Login_Field = ({ setShow }) => {
         setFields((prevFields) =>
           prevFields.map((field) => ({
             ...field,
-            value: "", // Reset each field's value to an empty string
-            hasError: false, // Reset error states
-            error: "", // Clear any error messages
+            value: "",
+            hasError: false,
+            error: "",
           }))
         );
+        successToast("Login Successfully!!!");
         setLoading(false);
         route.push("/");
         setShow(false);
       } else {
-        alert(
-          `Error during registration: ${
-            response.data.message || "Unknown error"
-          }`
-        );
+        showToast("Invalid Password");
       }
     } catch (error) {
       // alert("Error during registration: " + error.message);
       setLoading(false);
+      console.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -213,7 +232,7 @@ const Login_Field = ({ setShow }) => {
 
       <div>
         <button
-          className="mt-4 px-4 py-2 rounded-md bg-orange-500 text-white hover:bg-white hover:text-orange-500 w-full"
+          className="mt-4 px-4 py-2 rounded-md border-2 border-orange-500 hover:bg-orange-500 hover:text-white w-full"
           onClick={(e) => handleSubmit(e)}
           disabled={isButtonDisabled()}
           style={{ cursor: isButtonDisabled() ? "not-allowed" : "pointer" }}

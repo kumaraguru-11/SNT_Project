@@ -9,7 +9,13 @@ import { Dialog } from "primereact/dialog";
 import { getOtp } from "@/NutsBeeAPI/getApi";
 import { AddtoCart } from "@/NutsBeeAPI/postApi";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { authKey, email, userInfo, cartParams } from "../recoilstore/store";
+import {
+  authKey,
+  email,
+  userInfo,
+  cartParams,
+  toastState,
+} from "../recoilstore/store";
 import Loader from "../component/Loader";
 
 const main = () => {
@@ -24,6 +30,25 @@ const main = () => {
   const [cart, setCart] = useRecoilState(cartParams);
   const auth = useRecoilValue(authKey);
   const useremail = useRecoilValue(email);
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
+
+  const errorToast = (message) => {
+    setToastMessage({
+      severity: "error",
+      summary: "Error",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
 
   const [productList, setProductList] = useState([]);
 
@@ -32,6 +57,7 @@ const main = () => {
     setProduct(val);
   };
 
+  // fake data
   // const arr = [
   //   {
   //     title: "Brown eggs",
@@ -99,7 +125,7 @@ const main = () => {
         try {
           const res = await getOtp(payload);
           setUserDetails(res);
-          setCart(res.cartItems)
+          setCart(res.cartItems);
         } catch (error) {
           console.error(error);
         }
@@ -108,6 +134,9 @@ const main = () => {
       fetchData();
     }
   }, [auth, useremail]);
+
+  //update value when changes in landing page.
+  useEffect(() => {}, [userDetails]);
 
   //fetch products
   useEffect(() => {
@@ -135,6 +164,7 @@ const main = () => {
     fetchData();
   }, []);
 
+  //add to cart API
   const addingCart = async (id) => {
     const payload = {
       userId: userDetails.id,
@@ -143,14 +173,18 @@ const main = () => {
     };
     try {
       const res = await AddtoCart(payload);
-      console.log(res, "console from landing page");
-      setCart((prev) => {
-        const itemExists = prev.some((val) => val.itemId === res.itemId);
-        if (!itemExists) {
-          return [...prev, res];
-        }
-        return prev;
-      });
+      if (res.status === 200 || res.status === 201) {
+        setCart((prev) => {
+          const itemExists = prev.some((val) => val.itemId === res.data.itemId);
+          if (!itemExists) {
+            return [...prev, res.data];
+          }
+          return prev;
+        });
+        showToast("cart Added");
+      }else{
+        errorToast("Something went wrong...")
+      }
     } catch (error) {
       console.error(error);
     }
@@ -172,36 +206,34 @@ const main = () => {
           <div className="grid mt-10 gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {productList &&
               productList.map((val) => (
-                <>
-                  <div
-                    className="card border rounded-lg shadow-lg overflow-hidden"
-                    key={val.id}
-                    onClick={() => handleProductDetail(val)}
-                  >
-                    <Image
-                      className="product-img"
-                      src={`/assest/${val.id}.jpg`}
-                      alt="Product Image 1"
-                      width={300}
-                      height={120}
-                      priority
-                    />
-                    <div className="p-5 text-center">
-                      <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
-                        {val.productName}
-                      </h2>
-                      <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
-                      <button
-                        className="bg-orange-500 text-white py-2 px-4 rounded"
-                        onClick={(e) => {
-                          handleDialog(e, val);
-                        }}
-                      >
-                        Add To Cart
-                      </button>
-                    </div>
+                <div
+                  className="card border rounded-lg shadow-lg overflow-hidden"
+                  key={val.id}
+                  onClick={() => handleProductDetail(val)}
+                >
+                  <Image
+                    className="product-img"
+                    src={`/assest/${val.id}.jpg`}
+                    alt="Product Image 1"
+                    width={300}
+                    height={120}
+                    priority
+                  />
+                  <div className="p-5 text-center">
+                    <h2 className="text-xl font-bold mb-2 md:text-lg sm:text-base">
+                      {val.productName}
+                    </h2>
+                    <p className="text-gray-600 mb-4">&#8377; {val.price}</p>
+                    <button
+                      className="bg-orange-500 text-white py-2 px-4 rounded"
+                      onClick={(e) => {
+                        handleDialog(e, val);
+                      }}
+                    >
+                      Add To Cart
+                    </button>
                   </div>
-                </>
+                </div>
               ))}
           </div>
         </>

@@ -12,7 +12,7 @@ export const loginUser = async (values) => {
 
     return response;
   } catch (error) {
-    return error.message;
+    return error.response.data.message;
   }
 };
 
@@ -43,19 +43,37 @@ export const emailOTP = async (payload) => {
 };
 export const AddtoCart = async (payload) => {
   try {
-    const res = await axios
-      .post(
-        `${host}/nutsBee/cart?userId=${payload.userId}&productId=${payload.productId}`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: payload.auth,
-          },
-        }
-      )
-    return res.data;
+    const res = await axios.post(
+      `${host}/nutsBee/cart?userId=${payload.userId}&productId=${payload.productId}`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: payload.auth,
+        },
+      }
+    );
+    return res;
   } catch (error) {
+    return error.message;
+  }
+};
+
+export const addAddress = async (payload) => {
+  try {
+    const response = await axios.post(
+      `${host}/nutsBee/address?userId=${payload.userId}`,
+      payload.address,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: payload.auth,
+        },
+      }
+    );
+
+    return response
+  } catch(error) {
     return error.message;
   }
 };

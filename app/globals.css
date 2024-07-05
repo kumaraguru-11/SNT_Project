@@ -182,6 +182,12 @@ primereact;
   transform: scale(1.1);
 }
 
+.cart-page .p-component{
+  height: 28rem;
+  overflow-y: scroll;
+  padding: 5px;
+}
+
 /* otp field */
 
 .otp .p-inputtext:focus,
@@ -291,12 +297,12 @@ primereact;
 }
 
 /* clip image for login */
-/* .bg-img {
+.form-bg {
   background-image: url("/assest/0.jpg");
-  background-position: center;
+  background-position: end;
   background-repeat: no-repeat;
   background-size: cover;
-} */
+}
 
 @media screen and (max-width: 1024px) {
   .cart-list {

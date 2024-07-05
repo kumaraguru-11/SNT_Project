@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "primeicons/primeicons.css";
+import { Menu } from "primereact/menu";
+import { Toast } from "primereact/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ListBox } from "primereact/listbox";
 import { Badge } from "primereact/badge";
 import { cartParams, authKey } from "@/recoilstore/store";
 import { useRecoilValue } from "recoil";
@@ -24,6 +25,9 @@ const Header = () => {
     cart: false,
   });
 
+  const toast = useRef(null);
+  const menuLeft = useRef(null);
+
   const [selecteduser, setSelectedUser] = useState(null);
   const router = useRouter();
 
@@ -43,29 +47,29 @@ const Header = () => {
     if (key === "cart") {
       router.push("/cart");
     }
+  };
 
-    if (key === "user" && !auth) {
-      setToggle({ ...toggle, user: false });
+  const handleUserMenu = (event) => {
+    setToggle({ ...toggle, user: !toggle.user });
+    if (!auth) {
       router.push("/login");
+      return;
     }
+    menuLeft.current.toggle(event);
   };
-
   //!user icon dropdown list
-  const users = [
-    { name: "profile", code: "pf" },
-    { name: "Logout", code: "lo" },
+  const items = [
+    {
+      label: "profile",
+      url: "/profile",
+    },
+    {
+      label: "logout",
+    },
   ];
-
-  //!user icon dropdown link
-  const handleUser = (link) => {
-    setSelectedUser(link);
-    setToggle({ ...toggle, user: false });
-    if (link === "profile") router.push(`/${link}`);
-  };
 
   return (
     <header
-      // className="flex items-center"
       style={{
         height: "6rem",
         position: "sticky",
@@ -76,6 +80,7 @@ const Header = () => {
         display: "flex",
         justifyContent: "center",
       }}
+      className="header"
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-8">
         <div className="flex items-center">
@@ -113,8 +118,7 @@ const Header = () => {
             onClick={() => handleToggle("search")}
           ></i>
           <i
-            className="pi pi-shopping-cart cursor-pointer p-3 font-medium relative p-overlay-badge
-            "
+            className="pi pi-shopping-cart cursor-pointer p-3 font-medium relative p-overlay-badge"
             style={{
               borderRadius: "50%",
               backgroundColor: toggle.cart ? "#f97316" : "",
@@ -122,7 +126,9 @@ const Header = () => {
             }}
             onClick={() => handleToggle("cart")}
           >
-            {cart && cart.length > 0 && <Badge value={cart.length}></Badge>}
+            {typeof window !== "undefined" && cart && cart.length > 0 && (
+              <Badge value={cart.length}></Badge>
+            )}
           </i>
           <i
             className="pi pi-user cursor-pointer p-3 font-medium"
@@ -131,7 +137,7 @@ const Header = () => {
               backgroundColor: toggle.user ? "#f97316" : "",
               color: toggle.user ? "white" : "",
             }}
-            onClick={() => handleToggle("user")}
+            onClick={(event) => handleUserMenu(event)}
           ></i>
           <i
             className="pi pi-bars cursor-pointer p-3 font-medium"
@@ -156,20 +162,8 @@ const Header = () => {
           <NavLink href="#">Contact us</NavLink>
         </nav>
       )}
-      {toggle.user === true && auth && (
-        <div
-          className="absolute bg-white shadow-lg rounded w-48"
-          style={{ top: "3.8rem", right: "1.8rem" }}
-        >
-          <ListBox
-            value={selecteduser}
-            onChange={(e) => handleUser(e.value.name)}
-            options={users}
-            optionLabel="name"
-            className="w-full"
-          />
-        </div>
-      )}
+      <Toast ref={toast}></Toast>
+      <Menu model={items} popup ref={menuLeft} />
     </header>
   );
 };

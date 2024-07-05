@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import "primeicons/primeicons.css";
 import Link from "next/link";
 import { validateFields } from "../../component/validation";
-import { authKey, email } from "@/recoilstore/store";
+import { email, toastState } from "@/recoilstore/store";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/NutsBeeAPI/postApi";
@@ -70,8 +70,17 @@ const SignUp = () => {
   const inputRef = useRef([]);
 
   //store data in recoil
-  const [auth, setAuth] = useRecoilState(authKey);
   const [userEmail, setUserEmail] = useRecoilState(email);
+  const [, setToastMessage] = useRecoilState(toastState);
+
+  const showToast = (message) => {
+    setToastMessage({
+      severity: "success",
+      summary: "Success",
+      detail: `${message}`,
+      life: 2000,
+    });
+  };
 
   useEffect(() => {
     if (inputRef.current[0]) {
@@ -157,7 +166,7 @@ const SignUp = () => {
     const payload = {
       username: values.firstname + " " + values.lastname, // Adjust according to how you want to set the username
       password: values.password,
-      email: values.email,
+      email: values.email.toLowerCase(),
       roles: [
         {
           roleName: "user",
@@ -168,8 +177,6 @@ const SignUp = () => {
     try {
       setLoading(true);
       const response = await registerUser(payload);
-      console.log(response, "signup page", payload.email);
-      // setAuth(response);
       setUserEmail(payload.email);
       // Clear all fields after successful registration
       setFields((prevFields) =>
@@ -181,7 +188,8 @@ const SignUp = () => {
         }))
       );
       setLoading(false);
-      route.push("/");
+      showToast("Register successfully!!!");
+      route.push("/login");
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -200,12 +208,11 @@ const SignUp = () => {
 
   return (
     <div className="h-full w-full flex items-center justify-center py-3">
-      {loading && <Loader />}
-      <div className="w-10/12 md:w-7/12 p-4 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
-        <div className="hidden sm:flex sm:flex-1 relative border-r-2">
-          <h1 className="text-5xl font-black text-orange-300 absolute top-72 left-3 transform -rotate-90 origin-top-left tracking-widest">
+      <div className="w-10/12 lg:w-7/12 min-h-96 mt-10 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
+        <div className="hidden sm:flex sm:flex-1 relative border-r-2 form-bg">
+          {/* <h1 className="text-5xl font-black text-orange-300 absolute top-72 left-3 transform -rotate-90 origin-top-left tracking-widest">
             NUTSBEE
-          </h1>
+          </h1> */}
         </div>
         <div className="flex-1 p-3 form">
           <h2 className="text-2xl font-bold text-orange-500 mb-2">
@@ -274,7 +281,7 @@ const SignUp = () => {
           <div>
             <button
               onClick={(e) => handleSubmit(e)}
-              className="mt-4 px-4 py-2 w-full rounded bg-orange-500 text-white hover:bg-white hover:text-orange-500"
+              className="mt-4 px-4 py-2 w-full rounded border-2 mb-3 border-orange-500 text-orange hover:bg-white hover:text-white hover:bg-orange-500"
               disabled={isButtonDisabled()}
               style={{ cursor: isButtonDisabled() ? "not-allowed" : "pointer" }}
             >
@@ -314,6 +321,7 @@ const SignUp = () => {
           </div> */}
         </div>
       </div>
+      {loading && <Loader />}
     </div>
   );
 };

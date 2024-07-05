@@ -74,3 +74,9 @@ export const cartParams = createPersistentAtom("cartParams", []);
 export default function RecoilContextProvider({ children }) {
   return <RecoilRoot>{children}</RecoilRoot>;
 }
+
+//normal store for Toast
+export const toastState = atom({
+  key: "toastState",
+  default: null,
+});
