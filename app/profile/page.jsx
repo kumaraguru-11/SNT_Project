@@ -29,10 +29,7 @@ const Profile = () => {
     pincode: "",
     state: "TN",
   });
-<<<<<<< HEAD
   const [addressId, setAddressId] = useState();
-=======
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 
   //prime react toast
   const [, setToastMessage] = useRecoilState(toastState);
@@ -73,10 +70,7 @@ const Profile = () => {
         pincode: item.pincode,
         state: "TN",
       });
-<<<<<<< HEAD
       setAddressId(item.id);
-=======
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
     }
 
     if (fun === "View") {
@@ -144,7 +138,6 @@ const Profile = () => {
     }
   };
 
-<<<<<<< HEAD
   //Edit Api function
   const handleEditAddress = async () => {
     const existingAddress = userDetails?.addresses.find(
@@ -219,8 +212,6 @@ const Profile = () => {
     }
   };
 
-=======
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
   //input field value
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -345,11 +336,7 @@ const Profile = () => {
             </div>
           </article>
         </section>
-<<<<<<< HEAD
       </div>
-=======
-      </main>
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
 
       {/* view address Dialog Box */}
       {addressList && (
@@ -493,16 +480,8 @@ const Profile = () => {
           </button>
         </div>
       </Dialog>
-<<<<<<< HEAD
     </main>
   );
 };
 
 export default Profile;
-=======
-    </div>
-  );
-};
-
-export default Profile;
->>>>>>> a5f7dfd85be5eac9b269f2d6c414088a604ff1af
