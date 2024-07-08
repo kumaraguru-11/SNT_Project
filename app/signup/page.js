@@ -207,7 +207,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="h-full w-full flex items-center justify-center py-3">
+    <div className="h-full w-full flex items-center justify-center py-3 center">
       <div className="w-10/12 lg:w-7/12 min-h-96 mt-10 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
         <div className="hidden sm:flex sm:flex-1 relative border-r-2 form-bg">
           {/* <h1 className="text-5xl font-black text-orange-300 absolute top-72 left-3 transform -rotate-90 origin-top-left tracking-widest">
