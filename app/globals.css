@@ -239,7 +239,7 @@ primereact;
 }
 
 /* cart page product tabel design */
-.p-datatable .p-datatable-thead > tr > th {
+.card-component .p-datatable .p-datatable-thead > tr > th {
   background: none;
   border-bottom: 1px solid #f97316;
   color: #f97316;
@@ -248,7 +248,7 @@ primereact;
   line-height: 36px;
 }
 
-.p-datatable .p-datatable-tbody > tr > td {
+.card-component .p-datatable .p-datatable-tbody > tr > td {
   border-bottom: none;
   color: #f97316;
   font-weight: 400;

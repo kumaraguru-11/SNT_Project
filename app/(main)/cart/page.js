@@ -204,7 +204,7 @@ const Cart = () => {
       {products.length > 0 && (
         <div className="gap-2 cart-list">
           {/* Tabel */}
-          <div className="card mt-10 flex-grow cart-page">
+          <div className="card mt-10 flex-grow cart-page card-component">
             <DataTable
               value={products}
               header=""
