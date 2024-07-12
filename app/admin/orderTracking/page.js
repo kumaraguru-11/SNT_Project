@@ -140,7 +140,7 @@ const Admin = () => {
       />
     );
   };
-  
+
   const handleSubmit = () => {
     const validOrders = orderList.filter(
       (order) => order.checked && order.courierId.trim() !== ""
@@ -170,7 +170,7 @@ const Admin = () => {
     );
     setOrderList(updatedList);
   };
-
+  //status Template
   const statusTemplate = (rowData) => {
     const options =
       rowData.status === ""
