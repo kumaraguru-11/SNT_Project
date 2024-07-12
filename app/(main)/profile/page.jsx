@@ -8,12 +8,15 @@ import { Dialog } from "primereact/dialog";
 import "primeicons/primeicons.css";
 import { deleteAddress } from "@/NutsBeeAPI/deleteApi";
 import { addAddress } from "@/NutsBeeAPI/postApi";
-import { patchAddress } from "@/NutsBeeAPI/patchApi";
+import { patchAddress, patchPhoneNumber } from "@/NutsBeeAPI/patchApi";
 
 const Profile = () => {
   const [visible, setVisible] = useState(false);
   const [addressList, setAddressList] = useState(false);
   const [action, setAction] = useState();
+
+  const [showNumber, setShowNumber] = useState(false);
+  const [getNumber, setGetNumber] = useState("");
 
   const auth = useRecoilValue(authKey);
   // const userDetails = useRecoilValue(userInfo);
@@ -221,6 +224,33 @@ const Profile = () => {
     }));
   };
 
+  //patch the phone Number
+  const handlePatchNumber = async () => {
+    if (getNumber) {
+      const payload = {
+        Id: `${userDetails.id}`,
+        updatedNumber: {
+          phoneNumber: getNumber,
+        },
+        auth: auth.Authorization,
+      };
+
+      try {
+        const res = await patchPhoneNumber(payload);
+        if (res.status === 200 || res.status === 201) {
+          showToast("Address Updated Successfully!!!");
+          const updateNumber = { ...userDetails, phoneNumber: getNumber };
+          setUserDetails(updateNumber);
+          setGetNumber("");
+          setShowNumber(false);
+        } else {
+          console.log("error");
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  };
   // Ensure that certain parts are only rendered on the client side
   if (typeof window === "undefined") {
     return null; // or some server-rendered placeholder
@@ -247,6 +277,7 @@ const Profile = () => {
                 <i
                   className="pi pi-pencil absolute p-3 rounded-full hover:cursor-pointer text-white right-0 top-4"
                   style={{ backgroundColor: "#f97316" }}
+                  onClick={() => setShowNumber(true)}
                 ></i>
               </span>
             </div>
@@ -479,6 +510,44 @@ const Profile = () => {
             Discard
           </button>
         </div>
+      </Dialog>
+
+      {/* PhoneNumber update Dialog Box */}
+      <Dialog
+        header={"update number"}
+        visible={showNumber}
+        style={{ maxWidth: "40rem", width: "90%" }}
+        onHide={() => {
+          if (!showNumber) return;
+          setShowNumber(false);
+        }}
+      >
+        <div className="float-label mt-5">
+          <input
+            type="number"
+            className="input-field border-2 border-orange-500 p-3 rounded w-full"
+            name="phoneNumber"
+            placeholder=""
+            value={getNumber}
+            onChange={(e) => {
+              setGetNumber(e.target.value);
+            }}
+          />
+          <label className="float-label-text">Enter Your Number</label>
+        </div>
+
+        <button
+          className="p-2 rounded bg-orange-500 text-white"
+          onClick={() => handlePatchNumber()}
+        >
+          save
+        </button>
+        <button
+          className="p-2 ms-5 rounded bg-orange-500 text-white"
+          onClick={() => setGetNumber("")}
+        >
+          Discard
+        </button>
       </Dialog>
     </main>
   );

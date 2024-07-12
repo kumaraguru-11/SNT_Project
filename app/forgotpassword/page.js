@@ -135,7 +135,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="h-full w-full flex items-center justify-center py-5" >
+    <div className="h-full w-full flex items-center justify-center py-5 center" >
       <div className="w-10/12 md:w-7/12 min-h-96 border-1 shadow-lg shadow-blue-500/50 flex justify-between">
         {/* NUTSBEE */}
         <div className="hidden sm:flex sm:flex-1 relative border-r-2">

@@ -37,3 +37,20 @@ export const patchAddress = async (payload) => {
     console.error(error);
   }
 };
+export const patchPhoneNumber = async (payload) => {
+  try {
+    const res = await axios.patch(
+      `${host}/nutsBee/users/${payload.Id}`,
+      payload.updatedNumber,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: payload.auth,
+        },
+      }
+    );
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};

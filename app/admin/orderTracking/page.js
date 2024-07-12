@@ -140,7 +140,7 @@ const Admin = () => {
       />
     );
   };
-  //hanleSubmit
+  
   const handleSubmit = () => {
     const validOrders = orderList.filter(
       (order) => order.checked && order.courierId.trim() !== ""
